@@ -157,20 +157,19 @@ export async function testPackage(...buildTypes: string[]) {
         // disable ninja :(
         //"-GNinja",
         await executeAsync("cmake", [
-            "..", `-DCMAKE_BUILD_TYPE=${buildType}`,
+            "-B", buildDir,
+            `-DCMAKE_BUILD_TYPE=${buildType}`,
             '-DCMAKE_C_COMPILER=clang',
             '-DCMAKE_CXX_COMPILER=clang++'
-        ], {
-            cwd: buildDir
-        });
+        ]);
 
-        await executeAsync("ninja", ["test-package"], {
-            cwd: buildDir
-        });
+        await executeAsync("cmake", ["--build", buildDir, "--target", "test-package"]);
 
         // fs.chmodSync(path.join(buildDir, "test-package"), 0o755);
         await executeAsync("./test-package", [], {
             cwd: buildDir
         });
+
+        await fs.promises.rm(buildDir, {recursive: true});
     }
 }
