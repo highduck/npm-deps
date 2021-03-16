@@ -1,5 +1,5 @@
 {
-  "name": "@ekx/freetype",
+  "name": "@ekx/cairo",
   "version": "0.0.1",
   "scripts": {
     "build": "node recipe/package.js",
@@ -7,11 +7,11 @@
   },
   "files": [
     "CMakeLists.txt",
-    "src",
-    "include"
+    "src"
   ],
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.1"
+    "@ekx/cli-utils": "0.0.1",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
   }
