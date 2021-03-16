@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: 14
 
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
+
       - name: Intall Yarn
         run: npm install --global yarn
 
