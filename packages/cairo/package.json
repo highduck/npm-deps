@@ -2,8 +2,10 @@
   "name": "@ekx/cairo",
   "version": "0.0.1",
   "scripts": {
-    "build": "node recipe/package.js",
-    "test": "node recipe/test-package.js"
+    "build": "echo build",
+    "test": "echo test",
+    "recipe:build": "node recipe/package.js",
+    "package:test": "node recipe/test-package.js"
   },
   "files": [
     "CMakeLists.txt",

@@ -32,8 +32,14 @@ jobs:
           SHOW_SPAWN_CMD: true
           CI: true
 
-      - name: Test
-        run: yarn workspaces run test
+      - name: Build Recipes
+        run: yarn workspaces run recipe:build
+        env:
+          SHOW_SPAWN_CMD: true
+          CI: true
+
+      - name: Test Packages
+        run: yarn workspaces run package:test
         env:
           SHOW_SPAWN_CMD: true
           CI: true

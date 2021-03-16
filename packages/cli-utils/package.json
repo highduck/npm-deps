@@ -10,7 +10,9 @@
   "scripts": {
     "watch": "tsc -w",
     "build": "tsc",
-    "test": "echo test"
+    "test": "echo test",
+    "recipe:build": "echo recipe:build",
+    "package:test": "echo package:test"
   },
   "devDependencies": {
     "typescript": "^4.1.3",

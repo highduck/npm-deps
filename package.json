@@ -5,7 +5,8 @@
   "scripts": {
     "release": "changeset publish",
     "version": "changeset version && yarn update-lock",
-    "update-lock": "yarn && git add yarn.lock"
+    "update-lock": "yarn && git add yarn.lock",
+    "dev:check-ci": "yarn workspaces run build && yarn workspaces run recipe:build && yarn workspaces run package:test"
   },
   "dependencies": {
     "@changesets/cli": "^2.14.1"
