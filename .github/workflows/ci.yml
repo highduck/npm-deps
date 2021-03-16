@@ -35,6 +35,10 @@ jobs:
       - name: Test
         run: yarn workspaces run test
         env:
+          # Ubuntu-latest: https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md
+          # includes clang 9.0
+          CC: clang-9,
+          CXX: clang++-9,
           SHOW_SPAWN_CMD: true
           CI: true
 
