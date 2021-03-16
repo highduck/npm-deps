@@ -58,11 +58,3 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
         )
-
-project(test-package)
-
-add_executable(${PROJECT_NAME}
-        test/main.cpp)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC freetype2)
-#add_compile_definitions(FT2_BUILD_LIBRARY)

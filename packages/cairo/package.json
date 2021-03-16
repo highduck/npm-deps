@@ -1,5 +1,5 @@
 {
-  "name": "@ekx/freetype",
+  "name": "@ekx/cairo",
   "version": "0.0.1",
   "scripts": {
     "build": "echo build",
@@ -9,8 +9,7 @@
   },
   "files": [
     "CMakeLists.txt",
-    "src",
-    "include"
+    "src"
   ],
   "devDependencies": {
     "@ekx/cli-utils": "0.0.1",

@@ -4,7 +4,9 @@ import * as path from 'path';
 import * as zlib from "zlib";
 import {ExtractOptions} from "tar";
 import {spawn} from "child_process";
+import * as crypto from 'crypto';
 
+const lzma = require('lzma-native');
 const tar = require('tar');
 
 export function makeDirs(dir: string) {
@@ -85,7 +87,7 @@ export function downloadFiles(props: DownloadOptions) {
     return Promise.all(tasks);
 }
 
-function unpackTgz(packageTgz: string, unpackTarget: string) {
+export function unpackTgz(packageTgz: string, unpackTarget: string) {
     const extractOpts: ExtractOptions = {cwd: unpackTarget, strip: 1};
 
     return new Promise((resolve, reject) => {
@@ -107,12 +109,48 @@ function unpackTgz(packageTgz: string, unpackTarget: string) {
     })
 }
 
+export function unpackTarXZ(packageTar: string, unpackTarget: string) {
+    const extractOpts: ExtractOptions = {cwd: unpackTarget, strip: 1};
+    tar.extract(extractOpts);
+    return new Promise((resolve, reject) => {
+        fs.createReadStream(packageTar)
+            .on('error', function (err) {
+                reject('Unable to open tarball ' + packageTar + ': ' + err);
+            })
+            .pipe(lzma.createDecompressor())
+            .on('error', function (err) {
+                reject('Error during unzip for ' + packageTar + ': ' + err);
+            })
+            .pipe(tar.extract(extractOpts))
+            .on('error', function (err) {
+                reject('Error during untar for ' + packageTar + ': ' + err);
+            })
+            .on('end', function (result) {
+                resolve(result)
+            });
+    })
+}
+
 export async function downloadAndUnpackArtifact(url: string, destDir: string) {
     const name = path.basename(url);
     const archivePath = path.join(destDir, name);
     await downloadFile(url, archivePath);
     await unpackTgz(archivePath, "./" + destDir);
     await fs.rmSync(archivePath);
+}
+
+export async function downloadCheck(url: string, destDir: string, sha1: string) {
+    const name = path.basename(url);
+    const archivePath = path.join(destDir, name);
+    if(fs.existsSync(archivePath)) {
+        const file = fs.readFileSync(archivePath);
+        const sha1sum = crypto.createHash('sha1').update(file).digest("hex");
+        if(sha1sum === sha1) {
+            console.info("Check SHA1 verified, skip downloading", name);
+            return;
+        }
+    }
+    await downloadFile(url, archivePath);
 }
 
 const UtilityConfig = {
@@ -147,23 +185,29 @@ export async function testPackage(...buildTypes: string[]) {
 
         try {
             await fs.promises.rm(buildDir, {recursive: true});
-        }
-        catch(e) {
+        } catch (e) {
 
         }
         await fs.promises.mkdir(buildDir);
 
-        await executeAsync("cmake", ["..", "-GNinja", `-DCMAKE_BUILD_TYPE=${buildType}`], {
-            cwd: buildDir
-        });
+        // Ubuntu-latest: https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md
+        // includes clang 9.0
+        // disable ninja :(
+        //"-GNinja",
+        await executeAsync("cmake", ["./test",
+            "-B", buildDir,
+            `-DCMAKE_BUILD_TYPE=${buildType}`,
+            '-DCMAKE_C_COMPILER=clang',
+            '-DCMAKE_CXX_COMPILER=clang++'
+        ]);
 
-        await executeAsync("ninja", ["test-package"], {
-            cwd: buildDir
-        });
+        await executeAsync("cmake", ["--build", buildDir, "--target", "test-package"]);
 
         // fs.chmodSync(path.join(buildDir, "test-package"), 0o755);
         await executeAsync("./test-package", [], {
             cwd: buildDir
         });
+
+        await fs.promises.rm(buildDir, {recursive: true});
     }
 }
