@@ -33,7 +33,7 @@ jobs:
           CI: true
 
       - name: Test
-        run: arn workspaces run test
+        run: yarn workspaces run test
         env:
           SHOW_SPAWN_CMD: true
           CI: true
