@@ -1,0 +1,18 @@
+{
+  "name": "@ekx/freetype",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "node recipe/prepare.js",
+    "test": "node recipe/test-package.js"
+  },
+  "files": [
+    "CMakeLists.txt",
+    "src",
+    "include"
+  ],
+  "devDependencies": {
+    "@ekx/cli-utils": "0.0.1"
+  },
+  "dependencies": {
+  }
+}

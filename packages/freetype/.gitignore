@@ -1,0 +1,4 @@
+cmake-build-*/
+_dist/
+include/
+src/

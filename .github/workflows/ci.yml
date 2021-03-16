@@ -1,0 +1,48 @@
+name: Release Flow
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Intall Yarn
+        run: npm install --global yarn
+
+      - name: Intall Dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Build
+        run: yarn workspaces run build
+        env:
+          SHOW_SPAWN_CMD: true
+          CI: true
+
+      - name: Test
+        run: yarn workspaces run test
+        env:
+          SHOW_SPAWN_CMD: true
+          CI: true
+
+      - name: Create Release Pull Request or Publish to NPM
+        if: ${{ github.ref == 'refs/heads/master' }}
+        id: changesets
+        uses: changesets/action@master
+        with:
+          # This expects you to have a script called release which does a build for your packages and calls changeset publish
+          publish: yarn release
+          version: yarn version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

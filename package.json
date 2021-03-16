@@ -1,0 +1,16 @@
+{
+  "name": "npm-deps",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "release": "changeset publish",
+    "version": "changeset version && yarn update-lock",
+    "update-lock": "yarn && git add yarn.lock"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.14.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
