@@ -7,6 +7,10 @@
     "recipe:build": "node recipe/package.js",
     "package:test": "node recipe/test-package.js"
   },
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "CMakeLists.txt",
     "src",
