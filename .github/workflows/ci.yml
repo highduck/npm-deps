@@ -17,8 +17,8 @@ jobs:
         with:
           node-version: 14
 
-      - name: Setup Ninja
-        uses: ashutoshvarma/setup-ninja@master
+#      - name: Setup Ninja
+#        uses: ashutoshvarma/setup-ninja@master
 
       - name: Intall Yarn
         run: npm install --global yarn
@@ -33,15 +33,10 @@ jobs:
           CI: true
 
       - name: Test
-        run: export CC=clang && export CXX=clang++ && yarn workspaces run test
+        run: arn workspaces run test
         env:
-          # Ubuntu-latest: https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md
-          # includes clang 9.0
-          CC: clang,
-          CXX: clang++,
-          CMAKE_MAKE_PROGRAM: ninja,
           SHOW_SPAWN_CMD: true
-          #CI: true
+          CI: true
 
       - name: Create Release Pull Request or Publish to NPM
         if: ${{ github.ref == 'refs/heads/master' }}

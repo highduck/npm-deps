@@ -147,13 +147,20 @@ export async function testPackage(...buildTypes: string[]) {
 
         try {
             await fs.promises.rm(buildDir, {recursive: true});
-        }
-        catch(e) {
+        } catch (e) {
 
         }
         await fs.promises.mkdir(buildDir);
 
-        await executeAsync("cmake", ["..", "-GNinja", `-DCMAKE_BUILD_TYPE=${buildType}`], {
+        // Ubuntu-latest: https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md
+        // includes clang 9.0
+        // disable ninja :(
+        //"-GNinja",
+        await executeAsync("cmake", [
+            "..", `-DCMAKE_BUILD_TYPE=${buildType}`,
+            '-DCMAKE_C_COMPILER=clang',
+            '-DCMAKE_CXX_COMPILER=clang++'
+        ], {
             cwd: buildDir
         });
 
