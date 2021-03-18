@@ -7,7 +7,7 @@
     "version": "changeset version && yarn update-lock",
     "update-lock": "yarn && git add yarn.lock",
     "dev:check-ci": "wsrun -m build && wsrun -m recipe:build && wsrun -m package:test",
-    "postinstall": "wsrun -m postinstall"
+    "postinstall": "yarn workspace @ekx/cli-utils build && wsrun -m postinstall"
   },
   "dependencies": {
     "@changesets/cli": "^2.14.1"
