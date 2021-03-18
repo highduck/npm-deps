@@ -10,11 +10,11 @@
     "postinstall": "wsrun -m postinstall"
   },
   "dependencies": {
-    "@changesets/cli": "^2.14.1"
+    "@changesets/cli": "^2.14.1",
+    "wsrun": "^5.2.4"
   },
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.1",
-    "wsrun": "^5.2.4"
+    "@ekx/cli-utils": "0.0.1"
   },
   "workspaces": {
     "packages": ["packages/*"]
