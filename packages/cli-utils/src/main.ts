@@ -1,9 +1,6 @@
 import {copyFolderRecursiveSync} from "./index";
 import * as path from "path";
 import * as fs from "fs";
-
-const resolveFrom = require('resolve-from');
-
 {
     const i = process.argv.indexOf("create");
     if (i >= 0) {
@@ -40,39 +37,6 @@ const resolveFrom = require('resolve-from');
             a = a.replace("# target_link_libraries(${PROJECT_NAME} PUBLIC library)",
                 `target_link_libraries(\${PROJECT_NAME} PUBLIC ${name})`);
             fs.writeFileSync(filePath, a);
-        }
-
-
-    }
-}
-
-{
-    const i = process.argv.indexOf("resolve-cmake-npm-dependencies");
-    if (i >= 0) {
-        // read current package.json
-        const pkg:{
-            dependencies?:{[key:string]:string}
-        } = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package.json"), 'utf-8'));
-
-        if(pkg.dependencies != null) {
-            let cmakeModule = ``;
-            for (const dep of Object.keys(pkg.dependencies)) {
-                const cmakePath = resolveFrom(process.cwd(), dep + "/CMakeLists.txt");
-                if (cmakePath != null) {
-                    const name = path.basename(dep);
-                    const where = path.dirname(cmakePath);
-                    const rel = path.relative(process.cwd(), where);
-                    cmakeModule += `
-                if(NOT TARGET ${name})
-                    add_subdirectory(${rel} ${name})
-                endif()
-                `;
-                }
-            }
-
-            if(cmakeModule.length > 0) {
-                fs.writeFileSync('npm.cmake', cmakeModule);
-            }
         }
 
 
