@@ -3,7 +3,8 @@
 // install stage check :(
 // TODO: move cli utils
 
-const main = "./dist/main.js";
+const path = require("path");
+const main = path.join(__dirname, "dist/main.js");
 
 try {
     require.resolve(main);
