@@ -10,7 +10,8 @@ try {
 } catch (_) {
     console.warn("main.js not found, need to build package...")
     require("child_process").spawnSync("tsc", {
-        stdio: "inherit"
+        stdio: "inherit",
+        cwd: __dirname
     });
 }
 
