@@ -1,3 +1,10 @@
 #!/usr/bin/env node
 
-require("./dist/main.js");
+// install stage check :(
+// TODO: move cli utils
+const fs = require("fs");
+const main = "./dist/main.js";
+if(!fs.existsSync(main)) {
+    require("child_process").spawnSync("tsc");
+}
+require(main);
