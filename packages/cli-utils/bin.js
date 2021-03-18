@@ -2,9 +2,15 @@
 
 // install stage check :(
 // TODO: move cli utils
-const fs = require("fs");
+
 const main = "./dist/main.js";
-if(!fs.existsSync(main)) {
+
+try {
+    require.resolve(main);
+}
+catch(_) {
+    console.warn("main.js not found, need to build package...")
     require("child_process").spawnSync("tsc");
 }
+
 require(main);
