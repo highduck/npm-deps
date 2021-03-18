@@ -58,14 +58,15 @@ function downloadFile(url: string, dest: string) {
 
 export interface DownloadOptions {
     srcBaseUrl: string;
-    destPath: string;
+    // destination path, `process.cwd` if not defined
+    destPath?: string;
     fileMap?: { [key: string]: string };
     fileList?: string[];
 }
 
 export function downloadFiles(props: DownloadOptions) {
     const srcBaseUrl = props.srcBaseUrl;
-    const destPath = props.destPath;
+    const destPath = props.destPath ?? process.cwd();
     const fileMap = props.fileMap ?? {};
     const fileList = props.fileList ?? [];
 
@@ -181,14 +182,14 @@ export function executeAsync(bin: string, args: string[], options?: ExecuteOptio
 
 export async function testPackage(...buildTypes: string[]) {
     for (const buildType of buildTypes) {
-        const buildDir = path.join(process.cwd(), 'cmake-test-' + buildType);
+        const buildDir = path.join(process.cwd(), 'build-package-test/cmake-build-' + buildType.toLowerCase());
 
         try {
             await fs.promises.rm(buildDir, {recursive: true});
         } catch (e) {
 
         }
-        await fs.promises.mkdir(buildDir);
+        await fs.promises.mkdir(buildDir, {recursive: true});
 
         // Ubuntu-latest: https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md
         // includes clang 9.0

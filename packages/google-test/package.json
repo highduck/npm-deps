@@ -1,0 +1,20 @@
+{
+  "name": "@ekx/google-test",
+  "version": "0.0.1",
+  "scripts": {
+    "recipe:build": "node recipe/package.js",
+    "package:test": "node recipe/test-package.js"
+  },
+  "license": "ISC",
+  "private": true,
+  "files": [
+    "CMakeLists.txt",
+    "src",
+    "include"
+  ],
+  "devDependencies": {
+    "@ekx/cli-utils": "0.0.1"
+  },
+  "dependencies": {
+  }
+}

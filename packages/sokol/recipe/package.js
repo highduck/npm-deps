@@ -1,0 +1,37 @@
+const {downloadFiles} = require('@ekx/cli-utils');
+
+async function run() {
+    console.info("sokol");
+    await downloadFiles({
+        srcBaseUrl: "https://github.com/floooh/sokol/raw/master",
+        destPath: "src",
+        fileList: [
+            "sokol_app.h",
+            "sokol_args.h",
+            "sokol_audio.h",
+            "sokol_fetch.h",
+            "sokol_gfx.h",
+            "sokol_glue.h",
+            "sokol_time.h",
+            "util/sokol_debugtext.h",
+            "util/sokol_fontstash.h",
+            "util/sokol_gfx_imgui.h",
+            "util/sokol_gl.h",
+            "util/sokol_imgui.h",
+            "util/sokol_memtrack.h",
+            "util/sokol_shape.h",
+        ]
+    });
+
+    console.info("sokol-shdc binaries");
+    await downloadFiles({
+        srcBaseUrl: "https://github.com/floooh/sokol-tools-bin/raw/master",
+        fileList: [
+            "bin/linux/sokol-shdc",
+            "bin/osx/sokol-shdc",
+            "bin/win32/sokol-shdc.exe",
+        ]
+    });
+}
+
+run().then();
