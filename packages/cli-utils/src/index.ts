@@ -143,10 +143,10 @@ export async function downloadAndUnpackArtifact(url: string, destDir: string) {
 export async function downloadCheck(url: string, destDir: string, sha1: string) {
     const name = path.basename(url);
     const archivePath = path.join(destDir, name);
-    if(fs.existsSync(archivePath)) {
+    if (fs.existsSync(archivePath)) {
         const file = fs.readFileSync(archivePath);
         const sha1sum = crypto.createHash('sha1').update(file).digest("hex");
-        if(sha1sum === sha1) {
+        if (sha1sum === sha1) {
             console.info("Check SHA1 verified, skip downloading", name);
             return;
         }
@@ -180,17 +180,59 @@ export function executeAsync(bin: string, args: string[], options?: ExecuteOptio
     });
 }
 
-export async function testPackage(...buildTypes: string[]) {
-    for (const buildType of buildTypes) {
-        const buildDir = path.join(process.cwd(), 'build-package-test/cmake-build-' + buildType.toLowerCase());
+/** Test Package **/
+export interface TestPackageOptions {
+    target?: string | string[];
+    buildType?: string | string[];
+}
 
+function resolveTestPackageOptions(optionsOrBuildTypes: [TestPackageOptions] | string[]) {
+    let options: TestPackageOptions = {};
+
+    if (optionsOrBuildTypes.length > 0) {
+        if (typeof optionsOrBuildTypes[0] === 'string') {
+            options.buildType = optionsOrBuildTypes as string[];
+        } else {
+            options = optionsOrBuildTypes[0] as TestPackageOptions;
+        }
+    }
+
+    if (options.buildType === undefined) {
+        options.buildType = ['Debug', 'Release'];
+    } else if (typeof options.buildType === 'string') {
+        options.buildType = [options.buildType];
+    }
+
+    if (options.target === undefined) {
+        options.target = ['test-package'];
+    } else if (typeof options.target === 'string') {
+        options.target = [options.target];
+    }
+
+    return options;
+}
+
+function getBuildDir(project: string, buildType?: string): string {
+    return path.join(process.cwd(), 'build', project, buildType?.toLowerCase());
+}
+
+export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] | string[]) {
+    const options = resolveTestPackageOptions(optionsOrBuildTypes);
+    const optionsTargets = options.target as string[];
+
+    // 1. clean
+    for (const buildType of options.buildType) {
+        const buildDir = getBuildDir('test-package', buildType);
         try {
             await fs.promises.rm(buildDir, {recursive: true});
         } catch (e) {
 
         }
-        await fs.promises.mkdir(buildDir, {recursive: true});
-
+        //await fs.promises.mkdir(buildDir, {recursive: true});
+    }
+    // 2. configure
+    for (const buildType of options.buildType) {
+        const buildDir = getBuildDir('test-package', buildType);
         // Ubuntu-latest: https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md
         // includes clang 9.0
         // disable ninja :(
@@ -201,14 +243,34 @@ export async function testPackage(...buildTypes: string[]) {
             '-DCMAKE_C_COMPILER=clang',
             '-DCMAKE_CXX_COMPILER=clang++'
         ]);
+    }
 
-        await executeAsync("cmake", ["--build", buildDir, "--target", "test-package"]);
+    // 3. build targets
+    for (const buildType of options.buildType) {
+        const buildDir = getBuildDir('test-package', buildType);
+        await executeAsync("cmake", [
+            "--build", buildDir,
+            "--target", ...optionsTargets
+        ]);
+    }
 
-        // fs.chmodSync(path.join(buildDir, "test-package"), 0o755);
-        await executeAsync("./test-package", [], {
-            cwd: buildDir
-        });
+    // 4. execute targets
+    for (const buildType of options.buildType) {
+        const buildDir = getBuildDir('test-package', buildType);
+        for(const target of optionsTargets) {
+            // fs.chmodSync(path.join(buildDir, "test-package"), 0o755);
+            await executeAsync("./" + target, [], {
+                cwd: buildDir
+            });
+        }
+    }
 
-        await fs.promises.rm(buildDir, {recursive: true});
+    // 5. clean
+    try {
+        const projectBuildDir = getBuildDir('test-package');
+        await fs.promises.rm(projectBuildDir, {recursive: true});
+    }
+    catch {
+        // mute
     }
 }

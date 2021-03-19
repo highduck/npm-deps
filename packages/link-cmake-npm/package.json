@@ -1,0 +1,15 @@
+{
+  "name": "@ekx/link-cmake-npm",
+  "version": "0.0.1",
+  "main": "link-cmake-npm.js",
+  "bin": {
+    "link-cmake-npm": "link-cmake-npm.js"
+  },
+  "files": [
+    "link-cmake-npm.js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "ISC"
+}

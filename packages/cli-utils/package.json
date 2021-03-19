@@ -7,8 +7,7 @@
     "dist"
   ],
   "bin": {
-    "ekxpm": "bin.js",
-    "link-cmake-npm": "link-cmake-npm.js"
+    "ekxpm": "bin.js"
   },
   "publishConfig": {
     "access": "public"

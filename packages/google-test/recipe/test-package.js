@@ -1,7 +1,9 @@
 const {testPackage} = require('@ekx/cli-utils');
 
 async function run() {
-    await testPackage('Debug', 'Release');
+    await testPackage({
+        target: ['test-package', 'test-benchmark']
+    });
 }
 
 run().then();
