@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(freetype2)
+project(freetype)
 
 add_library(${PROJECT_NAME} STATIC
         src/base/ftadvanc.c

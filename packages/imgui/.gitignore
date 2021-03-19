@@ -1,0 +1,5 @@
+cmake-*/
+_dist/
+include/
+src/
+npm.cmake
