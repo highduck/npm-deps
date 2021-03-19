@@ -7,7 +7,9 @@
     "postinstall": "link-cmake-npm"
   },
   "license": "ISC",
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "CMakeLists.txt",
     "src"

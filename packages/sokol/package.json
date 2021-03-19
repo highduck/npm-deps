@@ -6,11 +6,14 @@
     "package:test": "node recipe/test-package.js"
   },
   "license": "ISC",
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "CMakeLists.txt",
     "src",
-    "ek.js"
+    "ek.js",
+    "bin"
   ],
   "devDependencies": {
     "@ekx/cli-utils": "0.0.2"
