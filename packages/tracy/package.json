@@ -12,7 +12,8 @@
   "files": [
     "CMakeLists.txt",
     "src",
-    "stub"
+    "stub",
+    "ek.js"
   ],
   "devDependencies": {
     "@ekx/cli-utils": "0.0.3"
