@@ -14,7 +14,7 @@
     "wsrun": "^5.2.4"
   },
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.1"
+    "@ekx/cli-utils": "*"
   },
   "workspaces": {
     "packages": ["packages/*"]
