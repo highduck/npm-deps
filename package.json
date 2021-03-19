@@ -6,12 +6,17 @@
     "release": "changeset publish",
     "version": "changeset version && yarn update-lock",
     "update-lock": "yarn && git add yarn.lock",
-    "dev:check-ci": "yarn workspaces run build && yarn workspaces run recipe:build && yarn workspaces run package:test"
+    "dev:check-ci": "wsrun -m build && wsrun -m recipe:build && wsrun -m package:test",
+    "postinstall": "wsrun -m postinstall"
   },
   "dependencies": {
-    "@changesets/cli": "^2.14.1"
+    "@changesets/cli": "^2.14.1",
+    "wsrun": "^5.2.4"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "devDependencies": {
+    "@ekx/cli-utils": "0.0.1"
+  },
+  "workspaces": {
+    "packages": ["packages/*"]
+  }
 }

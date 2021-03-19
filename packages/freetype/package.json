@@ -2,8 +2,6 @@
   "name": "@ekx/freetype",
   "version": "0.0.1",
   "scripts": {
-    "build": "echo build",
-    "test": "echo test",
     "recipe:build": "node recipe/package.js",
     "package:test": "node recipe/test-package.js"
   },

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 
-add_subdirectory(.. freetype2)
+add_subdirectory(.. freetype)
 
 project(test-package)
 add_executable(${PROJECT_NAME} main.cpp)
@@ -12,4 +12,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         CXX_EXTENSIONS NO
         )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC freetype2)
+target_link_libraries(${PROJECT_NAME} PUBLIC freetype)

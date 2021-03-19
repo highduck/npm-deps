@@ -6,16 +6,17 @@
   "files": [
     "dist"
   ],
+  "bin": {
+    "ekxpm": "bin.js",
+    "link-cmake-npm": "link-cmake-npm.js"
+  },
   "publishConfig": {
     "access": "public"
   },
   "license": "ISC",
   "scripts": {
     "watch": "tsc -w",
-    "build": "tsc",
-    "test": "echo test",
-    "recipe:build": "echo recipe:build",
-    "package:test": "echo package:test"
+    "build": "tsc"
   },
   "devDependencies": {
     "typescript": "^4.1.3",

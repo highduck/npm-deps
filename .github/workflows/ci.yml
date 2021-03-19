@@ -27,19 +27,19 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Build
-        run: yarn workspaces run build
+        run: yarn wsrun -m build
         env:
           SHOW_SPAWN_CMD: true
           CI: true
 
       - name: Build Recipes
-        run: yarn workspaces run recipe:build
+        run: yarn wsrun -m recipe:build
         env:
           SHOW_SPAWN_CMD: true
           CI: true
 
       - name: Test Packages
-        run: yarn workspaces run package:test
+        run: yarn wsrun -m package:test
         env:
           SHOW_SPAWN_CMD: true
           CI: true
