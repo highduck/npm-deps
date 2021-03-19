@@ -8,9 +8,9 @@
     "update-lock": "yarn && git add yarn.lock",
     "dev:check-ci": "wsrun -m build && wsrun -m recipe:build && wsrun -m package:test",
     "postinstall": "wsrun -m postinstall",
-    "ci:build": "wsrun -m -e build",
-    "ci:build-recipes": "wsrun -m -e -r --changedSince master recipe:build",
-    "ci:test-packages": "wsrun -m -e -r --changedSince master package:test"
+    "ci:build": "wsrun -m -e -t build",
+    "ci:build-recipes": "wsrun -m -e -t recipe:build",
+    "ci:test-packages": "wsrun -m -e -t package:test"
   },
   "dependencies": {
     "@changesets/cli": "^2.14.1",
