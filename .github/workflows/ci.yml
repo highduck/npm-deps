@@ -21,7 +21,9 @@ jobs:
 #        uses: ashutoshvarma/setup-ninja@master
 
       - name: Intall Dependencies
-        run: npm ci
+        run: |
+          npm --version
+          npm ci
 
       - name: Build
         run: npm run ci:build
