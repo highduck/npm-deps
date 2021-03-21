@@ -42,6 +42,7 @@ async function run() {
             "client/TracyThread.hpp",
             "client/TracyArmCpuTable.hpp",
             "client/TracySysTrace.hpp",
+            "client/TracyRingBuffer.hpp",
             "TracyC.h",
             "libbacktrace/backtrace.hpp",
             "libbacktrace/alloc.cpp",
