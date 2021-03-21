@@ -10,14 +10,16 @@
     "postinstall": "wsrun -m postinstall",
     "ci:build": "wsrun -m -e -t build",
     "ci:build-recipes": "wsrun -m -e -t recipe:build",
-    "ci:test-packages": "wsrun -m -e -t package:test"
+    "ci:test-packages": "wsrun -m -e -t package:test",
+    "reset-clean": "rimraf **/node_modules/ rimraf **/package-lock.json"
   },
   "dependencies": {
     "@changesets/cli": "^2.14.1",
     "wsrun": "^5.2.4"
   },
   "devDependencies": {
-    "@ekx/cli-utils": "*"
+    "@ekx/cli-utils": "*",
+    "rimraf": "^3.0.2"
   },
   "workspaces": {
     "packages": [
