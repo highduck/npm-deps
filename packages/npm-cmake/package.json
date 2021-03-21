@@ -1,6 +1,6 @@
 {
   "name": "@ekx/npm-cmake",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "npm-cmake.js",
   "bin": {
     "npm-cmake": "npm-cmake.js"
