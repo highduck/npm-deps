@@ -56,6 +56,7 @@ async function run() {
             "libbacktrace/config.h",
             "libbacktrace/internal.hpp",
             "libbacktrace/filenames.hpp",
+            "libbacktrace/elf.cpp"
         ]
     });
 }
