@@ -23,9 +23,10 @@ jobs:
           node-version: 14
 
       - name: Intall Dependencies
+        # should be `npm ci`, but npm@6 can't resolve versions from npm@7
         run: |
           npm --version
-          npm ci
+          npm install
 
       - name: Build
         run: npm run ci:build
