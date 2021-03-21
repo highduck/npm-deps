@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "release": "npx changeset publish",
+    "release": "changeset publish",
     "version": "changeset version && npm run update-lock",
     "update-lock": "npm install && git add package-lock.json",
     "dev:check-ci": "wsrun -m build && wsrun -m recipe:build && wsrun -m package:test",
-    "prepublish": "wsrun -m prepublish",
+    "postinstall": "wsrun -m prepublish",
     "ci:build": "wsrun -m -e -t build",
     "ci:build-recipes": "wsrun -m -e -t recipe:build",
     "ci:test-packages": "wsrun -m -t package:test",

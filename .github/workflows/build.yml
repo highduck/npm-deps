@@ -47,15 +47,3 @@ jobs:
         env:
           SHOW_SPAWN_CMD: true
           CI: true
-
-      - name: Create Release Pull Request or Publish to NPM
-        if: ${{ github.ref == 'refs/heads/master' }}
-        id: changesets
-        uses: changesets/action@master
-        with:
-          # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: npm run release
-          version: npm run version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
