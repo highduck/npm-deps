@@ -10,7 +10,7 @@
     "prepublish": "wsrun -m prepublish",
     "ci:build": "wsrun -m -e -t build",
     "ci:build-recipes": "wsrun -m -e -t recipe:build",
-    "ci:test-packages": "wsrun -m -e -t package:test",
+    "ci:test-packages": "wsrun -m -t package:test",
     "reset-clean": "rimraf **/node_modules/ rimraf **/package-lock.json"
   },
   "dependencies": {

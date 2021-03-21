@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 3.13)
 project(gtest)
 add_library(${PROJECT_NAME} STATIC src/gtest-all.cc)
 target_include_directories(${PROJECT_NAME} PUBLIC ./include PRIVATE ./)
-target_link_libraries(${PROJECT_NAME} -lpthread)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
+target_link_libraries(${PROJECT_NAME} -lpthread)
 
 project(gtest_main)
 add_library(${PROJECT_NAME} STATIC src/gtest_main.cc)
@@ -39,6 +39,7 @@ add_library(${PROJECT_NAME} STATIC
         )
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 target_include_directories(${PROJECT_NAME} PUBLIC ./include)
+target_link_libraries(${PROJECT_NAME} -lpthread)
 
 project(benchmark_main)
 add_library(${PROJECT_NAME} STATIC
