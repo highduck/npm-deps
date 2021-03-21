@@ -20,26 +20,23 @@ jobs:
 #      - name: Setup Ninja
 #        uses: ashutoshvarma/setup-ninja@master
 
-      - name: Intall Yarn
-        run: npm install --global yarn
-
       - name: Intall Dependencies
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Build
-        run: yarn ci:build
+        run: npm run ci:build
         env:
           SHOW_SPAWN_CMD: true
           CI: true
 
       - name: Build Recipes
-        run: yarn ci:build-recipes
+        run: npm run ci:build-recipes
         env:
           SHOW_SPAWN_CMD: true
           CI: true
 
       - name: Test Packages
-        run: yarn ci:test-packages
+        run: npm run ci:test-packages
         env:
           SHOW_SPAWN_CMD: true
           CI: true
@@ -50,8 +47,8 @@ jobs:
         uses: changesets/action@master
         with:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: yarn run release
-          version: yarn run version
+          publish: npm run release
+          version: npm run version
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
