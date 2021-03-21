@@ -1,5 +1,16 @@
 # @ekx/imgui
 
+## 0.0.4
+
+### Patch Changes
+
+- b5ad43f: track source code in package for future update flow
+- Updated dependencies [b5ad43f]
+- Updated dependencies [b5ad43f]
+  - @ekx/npm-cmake@0.0.2
+  - @ekx/freetype@0.0.3
+  - @ekx/stb@0.0.2
+
 ## 0.0.3
 
 ### Patch Changes
