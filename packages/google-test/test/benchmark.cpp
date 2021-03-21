@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include <benchmark/benchmark.h>
 
@@ -7,7 +8,7 @@ static void BM_SomeFunction(benchmark::State& state) {
     // Perform setup here
     for (auto _ : state) {
         // This code gets timed
-        fabsf(-1.0f);
+        sinf(-1.0f);
     }
 }
 
