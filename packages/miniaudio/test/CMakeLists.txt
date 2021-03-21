@@ -12,4 +12,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         CXX_EXTENSIONS NO
         )
 
-target_link_libraries(${PROJECT_NAME} -lpthread -ldl PUBLIC miniaudio)
+target_link_libraries(${PROJECT_NAME}
+        PRIVATE -lpthread
+        PRIVATE -ldl
+        PUBLIC miniaudio)
