@@ -12,10 +12,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js 14
+      - name: Setup Node.js 15
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 15
 
 #      - name: Setup Ninja
 #        uses: ashutoshvarma/setup-ninja@master
