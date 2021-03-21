@@ -1,10 +1,14 @@
 name: Release Flow
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout Repository
@@ -17,8 +21,8 @@ jobs:
         with:
           node-version: 15
 
-#      - name: Setup Ninja
-#        uses: ashutoshvarma/setup-ninja@master
+      #- name: Setup Ninja
+      #  uses: ashutoshvarma/setup-ninja@master
 
       - name: Intall Dependencies
         run: |
@@ -31,12 +35,12 @@ jobs:
           SHOW_SPAWN_CMD: true
           CI: true
 
-# this will be redo into Update/check/release flow
-#      - name: Build Recipes
-#        run: npm run ci:build-recipes
-#        env:
-#          SHOW_SPAWN_CMD: true
-#          CI: true
+      # this will be redo into Update/check/release flow
+      #      - name: Build Recipes
+      #        run: npm run ci:build-recipes
+      #        env:
+      #          SHOW_SPAWN_CMD: true
+      #          CI: true
 
       - name: Test Packages
         run: npm run ci:test-packages

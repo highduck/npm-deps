@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "release": "changeset publish",
+    "release": "npx changeset publish",
     "version": "changeset version && npm run update-lock",
     "update-lock": "npm install && git add package-lock.json",
     "dev:check-ci": "wsrun -m build && wsrun -m recipe:build && wsrun -m package:test",
