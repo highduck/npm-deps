@@ -4,7 +4,7 @@
   "scripts": {
     "recipe:build": "node recipe/package.js",
     "package:test": "node recipe/test-package.js",
-    "postinstall": "npx -p @ekx/link-cmake-npm -c link-cmake-npm"
+    "prepublish": "npx @ekx/npm-cmake"
   },
   "license": "ISC",
   "publishConfig": {
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@ekx/freetype": "0.0.2",
-    "@ekx/link-cmake-npm": "0.0.1",
+    "@ekx/npm-cmake": "0.0.1",
     "@ekx/stb": "0.0.1"
   }
 }

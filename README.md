@@ -11,7 +11,6 @@ C++ modules via NPM
 
 - replace `lzma-native` to make initial install faster
 - cleanup task for packages
-- rename `link-cmake-npm` to `npm-cmake`
 - add support for scoped packages names mapping to cmake namespaces
 - ci only packages changed since previous release, or unreleased
 - rename repo
