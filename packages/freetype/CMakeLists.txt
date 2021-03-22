@@ -58,3 +58,5 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
         )
+
+add_library(ekx::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

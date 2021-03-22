@@ -5,10 +5,11 @@
 #include <benchmark/benchmark.h>
 
 static void BM_SomeFunction(benchmark::State& state) {
+    float x = 0.0f;
     // Perform setup here
     for (auto _ : state) {
         // This code gets timed
-        sinf(-1.0f);
+        x += sinf(-1.0f);
     }
 }
 

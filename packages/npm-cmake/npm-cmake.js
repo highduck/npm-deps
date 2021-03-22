@@ -32,26 +32,36 @@ function resolveFrom(fromDirectory, moduleId) {
     }
 }
 
+function convertPackageName(name) {
+    if (name.length > 0 && name[0] === "@" && name.indexOf("/") > 0) {
+        const parts = name.split("/");
+        const scope = parts[0].substr(1);
+        return scope + "::" + parts[1];
+    }
+    return name;
+}
+
 // read current package.json
 const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package.json"), 'utf-8'));
 
-if(pkg.dependencies != null) {
+if (pkg.dependencies != null) {
     let cmakeModule = ``;
     for (const dep of Object.keys(pkg.dependencies)) {
         const cmakePath = resolveFrom(process.cwd(), dep + "/CMakeLists.txt");
         if (cmakePath != null) {
-            const name = path.basename(dep);
+            const name = convertPackageName(dep);
+            const dir = path.basename(dep);
             const where = path.dirname(cmakePath);
             const rel = path.relative(process.cwd(), where);
-            cmakeModule += `
+            cmakeModule += `# ${dep} => ${name}
 if(NOT TARGET ${name})
-add_subdirectory(${rel} ${name})
+    add_subdirectory(${rel} ${dir})
 endif()
-`;
+\n`;
         }
     }
 
-    if(cmakeModule.length > 0) {
+    if (cmakeModule.length > 0) {
         fs.writeFileSync('npm.cmake', cmakeModule);
     }
 }
