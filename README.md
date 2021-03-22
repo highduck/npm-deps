@@ -1,6 +1,11 @@
-# npm-deps
+# ekx third-party
 
-C++ modules via NPM
+C++ modules via NPM packages
+
+## Versions
+
+- package version **is not equal** to packaged library version
+- package version currently just expose **packaging recipe versioning**
 
 ## Release Flow
 
@@ -11,7 +16,6 @@ C++ modules via NPM
 
 - replace `lzma-native` to make initial install faster
 - cleanup task for packages
-- add support for scoped packages names mapping to cmake namespaces
-- ci only packages changed since previous release, or unreleased
+- test only packages changed since previous release, or unreleased
 - rename repo
-- upgrade flow for git packages
+- upgrade flow (run recipe, check changes, run package test, push version change)

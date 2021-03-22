@@ -7,7 +7,7 @@ import {spawn} from "child_process";
 import * as crypto from 'crypto';
 import * as os from "os";
 
-const lzma = require('lzma-native');
+//const lzma = require('lzma-native');
 const tar = require('tar');
 
 export function makeDirs(dir: string) {
@@ -112,25 +112,31 @@ export function unpackTgz(packageTgz: string, unpackTarget: string) {
 }
 
 export function unpackTarXZ(packageTar: string, unpackTarget: string) {
-    const extractOpts: ExtractOptions = {cwd: unpackTarget, strip: 1};
-    tar.extract(extractOpts);
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(packageTar)
-            .on('error', function (err) {
-                reject('Unable to open tarball ' + packageTar + ': ' + err);
-            })
-            .pipe(lzma.createDecompressor())
-            .on('error', function (err) {
-                reject('Error during unzip for ' + packageTar + ': ' + err);
-            })
-            .pipe(tar.extract(extractOpts))
-            .on('error', function (err) {
-                reject('Error during untar for ' + packageTar + ': ' + err);
-            })
-            .on('end', function (result) {
-                resolve(result)
-            });
-    })
+
+    // "@types/lzma-native": "^4.0.0"
+    // "lzma-native": "^7.0.1"
+    // TODO: package build flow with separated dev module
+    throw new Error("LZMA is disabled temporary, unable to unpack XZ archive");
+
+    // const extractOpts: ExtractOptions = {cwd: unpackTarget, strip: 1};
+    // tar.extract(extractOpts);
+    // return new Promise((resolve, reject) => {
+    //     fs.createReadStream(packageTar)
+    //         .on('error', function (err) {
+    //             reject('Unable to open tarball ' + packageTar + ': ' + err);
+    //         })
+    //         .pipe(lzma.createDecompressor())
+    //         .on('error', function (err) {
+    //             reject('Error during unzip for ' + packageTar + ': ' + err);
+    //         })
+    //         .pipe(tar.extract(extractOpts))
+    //         .on('error', function (err) {
+    //             reject('Error during untar for ' + packageTar + ': ' + err);
+    //         })
+    //         .on('end', function (result) {
+    //             resolve(result)
+    //         });
+    // });
 }
 
 export async function downloadAndUnpackArtifact(url: string, destDir: string) {

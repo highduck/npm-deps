@@ -1,17 +1,17 @@
 {
-  "name": "npm-deps",
+  "name": "@ekx/third-party",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "release": "changeset publish",
-    "version": "changeset version && npm run update-lock",
-    "update-lock": "npm install && git add package-lock.json",
+    "version": "changeset version && yarn run update-lock",
+    "update-lock": "yarn && git add yarn.json",
     "dev:check-ci": "wsrun -m build && wsrun -m recipe:build && wsrun -m package:test",
     "postinstall": "wsrun -m postinstall",
     "ci:build": "wsrun -m -e -t build",
     "ci:build-recipes": "wsrun -m -e -t recipe:build",
     "ci:test-packages": "wsrun -m -t package:test",
-    "reset-clean": "rimraf **/node_modules/ rimraf **/package-lock.json"
+    "pm:reset": "rimraf **/node_modules/ **/package-lock.json **/yarn.lock"
   },
   "dependencies": {
     "@changesets/cli": "^2.14.1",
