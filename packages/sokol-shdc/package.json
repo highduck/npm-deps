@@ -1,6 +1,6 @@
 {
-  "name": "@ekx/sokol",
-  "version": "0.0.2",
+  "name": "@ekx/sokol-shdc",
+  "version": "0.0.1",
   "bin": {
     "sokol-shdc": "sokol-shdc.js"
   },
@@ -13,9 +13,8 @@
     "access": "public"
   },
   "files": [
-    "CMakeLists.txt",
-    "src",
-    "ek.js"
+    "bin",
+    "sokol-shdc.js"
   ],
   "devDependencies": {
     "@ekx/cli-utils": "0.0.3"

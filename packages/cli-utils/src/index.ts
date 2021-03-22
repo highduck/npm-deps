@@ -5,6 +5,7 @@ import * as zlib from "zlib";
 import {ExtractOptions} from "tar";
 import {spawn} from "child_process";
 import * as crypto from 'crypto';
+import * as os from "os";
 
 const lzma = require('lzma-native');
 const tar = require('tar');
@@ -216,6 +217,8 @@ function getBuildDir(project: string, buildType?: string): string {
     return path.join(process.cwd(), 'build', project, buildType?.toLowerCase());
 }
 
+const CPU_COUNT = os.cpus().length;
+
 export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] | string[]) {
     const options = resolveTestPackageOptions(optionsOrBuildTypes);
     const optionsTargets = options.target as string[];
@@ -228,17 +231,15 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
         } catch (e) {
 
         }
-        //await fs.promises.mkdir(buildDir, {recursive: true});
     }
+
     // 2. configure
     for (const buildType of options.buildType) {
         const buildDir = getBuildDir('test-package', buildType);
-        // Ubuntu-latest: https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md
-        // includes clang 9.0
-        // disable ninja :(
-        //"-GNinja",
-        await executeAsync("cmake", ["./test",
+        await executeAsync("cmake", [
+            "./test",
             "-B", buildDir,
+            "-G", "Ninja",
             `-DCMAKE_BUILD_TYPE=${buildType}`,
             '-DCMAKE_C_COMPILER=clang',
             '-DCMAKE_CXX_COMPILER=clang++'
@@ -250,6 +251,7 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
         const buildDir = getBuildDir('test-package', buildType);
         await executeAsync("cmake", [
             "--build", buildDir,
+            "--parallel", Math.max(1, CPU_COUNT * 2).toString(),
             "--target", ...optionsTargets
         ]);
     }
@@ -257,8 +259,7 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
     // 4. execute targets
     for (const buildType of options.buildType) {
         const buildDir = getBuildDir('test-package', buildType);
-        for(const target of optionsTargets) {
-            // fs.chmodSync(path.join(buildDir, "test-package"), 0o755);
+        for (const target of optionsTargets) {
             await executeAsync("./" + target, [], {
                 cwd: buildDir
             });
@@ -269,8 +270,7 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
     try {
         const projectBuildDir = getBuildDir('test-package');
         await fs.promises.rm(projectBuildDir, {recursive: true});
-    }
-    catch {
+    } catch {
         // mute
     }
 }
