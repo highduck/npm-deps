@@ -1,5 +1,11 @@
 # @ekx/cli-utils
 
+## 0.0.4
+
+### Patch Changes
+
+- 549e533: run cmake in parallel mode for cmake package tests
+
 ## 0.0.3
 
 ### Patch Changes
