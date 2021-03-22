@@ -1,5 +1,11 @@
 # @ekx/cairo
 
+## 0.0.4
+
+### Patch Changes
+
+- 549e533: scoped package name alias
+
 ## 0.0.3
 
 ### Patch Changes

@@ -17,7 +17,7 @@
     "sokol-shdc.js"
   ],
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.3"
+    "@ekx/cli-utils": "0.0.4"
   },
   "dependencies": {}
 }
