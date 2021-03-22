@@ -31,3 +31,5 @@ target_link_libraries(${PROJECT_NAME}
         PUBLIC stb
         PUBLIC freetype
         )
+
+add_library(ekx::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

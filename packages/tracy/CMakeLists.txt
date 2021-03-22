@@ -11,3 +11,5 @@ if (TRACY_ENABLE)
     add_definitions(-DTRACY_ENABLE)
     target_link_libraries(${PROJECT_NAME} -lpthread -ldl)
 endif ()
+
+add_library(ekx::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

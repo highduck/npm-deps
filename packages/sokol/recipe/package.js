@@ -22,16 +22,6 @@ async function run() {
             "util/sokol_shape.h",
         ]
     });
-
-    console.info("sokol-shdc binaries");
-    await downloadFiles({
-        srcBaseUrl: "https://github.com/floooh/sokol-tools-bin/raw/master",
-        fileList: [
-            "bin/linux/sokol-shdc",
-            "bin/osx/sokol-shdc",
-            "bin/win32/sokol-shdc.exe",
-        ]
-    });
 }
 
 run().then();

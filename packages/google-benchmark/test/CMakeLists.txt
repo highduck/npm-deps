@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.17)
 
 add_subdirectory(.. package)
+if(NOT TARGET ekx::google-benchmark)
+    message(ERROR " ekx::google-benchmark target is not defined")
+endif()
 
 project(test-package)
 add_executable(${PROJECT_NAME} main.cpp)
@@ -12,4 +15,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         CXX_EXTENSIONS NO
         )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC gtest_main)
+target_link_libraries(${PROJECT_NAME} PUBLIC ekx::google-benchmark)

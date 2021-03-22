@@ -144,3 +144,5 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         )
 
 target_link_libraries(${PROJECT_NAME} -lpthread)
+
+add_library(ekx::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
