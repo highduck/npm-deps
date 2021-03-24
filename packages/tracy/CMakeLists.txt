@@ -13,7 +13,12 @@ if (TRACY_ENABLE)
         target_link_libraries(${PROJECT_NAME}
                 PRIVATE -lpthread
                 PRIVATE -ldl)
-    endif ()
+    elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        target_link_libraries(${PROJECT_NAME}
+                PRIVATE ws2_32
+                PRIVATE dbghelp
+                )
+    endif()
 endif ()
 
 add_library(ekx::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
