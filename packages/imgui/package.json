@@ -4,7 +4,7 @@
   "scripts": {
     "recipe:build": "node recipe/package.js",
     "package:test": "node recipe/test-package.js",
-    "postinstall": "npm-cmake"
+    "postinstall": "npx npm-cmake"
   },
   "license": "ISC",
   "publishConfig": {
