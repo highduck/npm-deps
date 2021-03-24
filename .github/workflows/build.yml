@@ -17,6 +17,9 @@ jobs:
 #            shell: bash
 
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: 'msys2 {0}'
 
     steps:
       - name: Checkout Repository
