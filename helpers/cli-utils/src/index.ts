@@ -166,7 +166,8 @@ const UtilityConfig = {
 
 export type ExecuteOptions = {
     cwd?: string,
-    verbose?: boolean
+    verbose?: boolean,
+    passExitCode?: boolean
 };
 
 export function executeAsync(bin: string, args: string[], options?: ExecuteOptions): Promise<number> {
@@ -177,7 +178,7 @@ export function executeAsync(bin: string, args: string[], options?: ExecuteOptio
             cwd: options?.cwd
         });
         child.on('close', (code) => {
-            if (code === 0) {
+            if (code === 0 || !!options.passExitCode) {
                 resolve(code);
             } else {
                 reject('exit code: ' + code);
@@ -190,6 +191,8 @@ export function executeAsync(bin: string, args: string[], options?: ExecuteOptio
 export interface TestPackageOptions {
     target?: string | string[];
     buildType?: string | string[];
+    // set null to ignore
+    expectExitCode?: number | null
 }
 
 function resolveTestPackageOptions(optionsOrBuildTypes: [TestPackageOptions] | string[]) {
@@ -213,6 +216,10 @@ function resolveTestPackageOptions(optionsOrBuildTypes: [TestPackageOptions] | s
         options.target = ['test-package'];
     } else if (typeof options.target === 'string') {
         options.target = [options.target];
+    }
+
+    if (options.expectExitCode === undefined) {
+        options.expectExitCode = 0;
     }
 
     return options;
@@ -256,15 +263,31 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
         ]);
     }
 
+    let totalRun = 0;
+    let totalOK = 0;
+    let totalFailed = 0;
     // 4. execute targets
     for (const buildType of options.buildType) {
         const buildDir = getBuildDir('test-package', buildType);
         for (const target of optionsTargets) {
-            await executeAsync("./" + target, [], {
-                cwd: buildDir
+            const result = await executeAsync("./" + target, [], {
+                cwd: buildDir,
+                passExitCode: true
             });
+            console.info("Test run exit code:", result);
+            if (options.expectExitCode !== null &&
+                result != options.expectExitCode) {
+                console.error("Test run FAILED: exit code should be", options.expectExitCode);
+                ++totalFailed;
+            } else {
+                ++totalOK;
+            }
+            ++totalRun;
         }
     }
+
+    console.info("SUCCESSFUL TESTS:", totalOK, "/", totalRun);
+    console.warn("FAILED TESTS", totalFailed, "/", totalRun);
 
     // 5. clean
     try {
