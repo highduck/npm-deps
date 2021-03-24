@@ -30,6 +30,9 @@ jobs:
 
       - uses: msys2/setup-msys2@v2
         if: runner.os == 'Windows'
+        with:
+          path-type: inherit
+          release: false
       # https://github.com/actions/virtual-environments/issues/2257
       # https://stackoverflow.com/questions/63697371/how-to-use-clang-with-github-actions-on-windows
       #- name: Add clang path to $PATH env
