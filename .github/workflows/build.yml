@@ -23,11 +23,13 @@ jobs:
       - name: Add clang path to $PATH env
         if: runner.os == 'Windows'
         #shell: bash
-        run: echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
+        run: | 
+          echo "C:\msys64mingw64\bin" >> $GITHUB_PATH
+          echo "C:\Program Files (x86)\Etc" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
         #run: |
-        #  echo "::stop-commands::`echo -n ${{ secrets.GH_TOKEN }} | sha256sum | head -c 64`"
-        #  echo "::add-path::C:\msys64\mingw64\bin"
-        #  echo "::`echo -n ${{ secrets.GH_TOKEN }} | sha256sum | head -c 64`::"
+         # echo "::stop-commands::`echo -n ${{ secrets.GH_TOKEN }} | sha256sum | head -c 64`"
+         # echo "::add-path::C:\msys64\mingw64\bin"
+         # echo "::`echo -n ${{ secrets.GH_TOKEN }} | sha256sum | head -c 64`::"
 
       - name: Check installed versions
         run: |
