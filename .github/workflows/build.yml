@@ -34,8 +34,8 @@ jobs:
           yarn --version
           cmake --version
           ninja --version
-          clang.exe --version
-          clang++.exe --version
+          C:\msys64\mingw64\bin\clang.exe --version
+          C:\msys64\mingw64\bin\clang++.exe --version
           node --version
 
       - name: Intall Dependencies
