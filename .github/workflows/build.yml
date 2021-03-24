@@ -8,6 +8,13 @@ jobs:
       matrix:
         #os: [ ubuntu-latest, macos-latest, windows-latest ]
         os: [ windows-latest ]
+        include:
+          - os: ubuntu-latest
+            shell: bash
+          - os: macos-latest
+            shell: bash
+          - os: windows-latest
+            shell: msys2 {0}
 
     runs-on: ${{ matrix.os }}
 
@@ -20,11 +27,11 @@ jobs:
 
       # https://github.com/actions/virtual-environments/issues/2257
       # https://stackoverflow.com/questions/63697371/how-to-use-clang-with-github-actions-on-windows
-      - name: Add clang path to $PATH env
-        if: runner.os == 'Windows'
-        #shell: bash
-        run: | 
-          echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
+      #- name: Add clang path to $PATH env
+      #  if: runner.os == 'Windows'
+      #  #shell: bash
+      #  run: |
+      #    echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
         #run: |
          # echo "::stop-commands::`echo -n ${{ secrets.GH_TOKEN }} | sha256sum | head -c 64`"
          # echo "::add-path::C:\msys64\mingw64\bin"
