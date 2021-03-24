@@ -18,13 +18,15 @@ jobs:
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      # https://github.com/actions/virtual-environments/issues/2257
+      # https://stackoverflow.com/questions/63697371/how-to-use-clang-with-github-actions-on-windows
       - name: Add clang path to $PATH env
-        shell: bash
         if: runner.os == 'Windows'
-        run: echo "PATH=$PATH:C:\msys64\mingw64\bin" >> $GITHUB_ENV
+        #shell: bash
+        #run: echo "PATH=$PATH:C:\msys64\mingw64\bin" >> $GITHUB_ENV
+        run: echo "::add-path::C:\msys64\mingw64\bin"
 
       - name: Check installed versions
-        shell: bash
         run: |
           yarn --version
           cmake --version
