@@ -24,7 +24,7 @@ jobs:
         if: runner.os == 'Windows'
         #shell: bash
         run: | 
-          echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
+          echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
         #run: |
          # echo "::stop-commands::`echo -n ${{ secrets.GH_TOKEN }} | sha256sum | head -c 64`"
          # echo "::add-path::C:\msys64\mingw64\bin"
