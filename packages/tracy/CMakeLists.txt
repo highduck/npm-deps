@@ -9,7 +9,11 @@ if (TRACY_ENABLE)
     target_compile_options(${PROJECT_NAME} PRIVATE -g)
     target_compile_definitions(${PROJECT_NAME} INTERFACE TRACY_ENABLE)
     add_definitions(-DTRACY_ENABLE)
-    target_link_libraries(${PROJECT_NAME} -lpthread -ldl)
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+        target_link_libraries(${PROJECT_NAME}
+                PRIVATE -lpthread
+                PRIVATE -ldl)
+    endif ()
 endif ()
 
 add_library(ekx::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

@@ -23,7 +23,12 @@ add_library(${PROJECT_NAME} STATIC
         )
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 target_include_directories(${PROJECT_NAME} PUBLIC ./include)
-target_link_libraries(${PROJECT_NAME} -lpthread)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    target_link_libraries(${PROJECT_NAME} PRIVATE -lpthread)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    target_link_libraries(${PROJECT_NAME} PRIVATE -lshlwapi)
+endif ()
 
 project(benchmark_main)
 add_library(${PROJECT_NAME} STATIC
