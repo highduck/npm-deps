@@ -223,8 +223,6 @@ function getBuildDir(project: string, buildType?: string): string {
     return path.join(process.cwd(), 'build', project, buildType?.toLowerCase());
 }
 
-const CPU_COUNT = os.cpus().length;
-
 export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] | string[]) {
     const options = resolveTestPackageOptions(optionsOrBuildTypes);
     const optionsTargets = options.target as string[];
@@ -257,7 +255,6 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
         const buildDir = getBuildDir('test-package', buildType);
         await executeAsync("cmake", [
             "--build", buildDir,
-            "--parallel", Math.max(1, CPU_COUNT * 2).toString(),
             "--target", ...optionsTargets
         ]);
     }

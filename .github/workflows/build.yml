@@ -6,7 +6,8 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        #os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ windows-latest ]
 
     runs-on: ${{ matrix.os }}
 
@@ -17,12 +18,18 @@ jobs:
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - name: Add clang path to $PATH env
+        #shell: bash
+        if: runner.os == 'Windows'
+        run: echo "PATH=$PATH:C:\msys64\mingw64\bin" >> $GITHUB_ENV
+
       - name: Check installed versions
         run: |
           yarn --version
           cmake --version
           ninja --version
           clang++ --version
+          node --version
 
       - name: Intall Dependencies
         run: yarn --frozen-lockfile

@@ -11,19 +11,17 @@
     "ci:build": "wsrun -m -e -t build",
     "ci:build-recipes": "wsrun -m -e -t recipe:build",
     "ci:test-packages": "wsrun -m -t package:test",
-    "pm:reset": "rimraf **/node_modules/ **/package-lock.json **/yarn.lock"
+    "repo:clean": "git clean -fdx",
+    "check-install": "git clean -fdx && yarn --frozen-lockfile"
   },
   "dependencies": {
     "@changesets/cli": "^2.14.1",
     "wsrun": "^5.2.4"
   },
-  "devDependencies": {
-    "@ekx/cli-utils": "*",
-    "rimraf": "^3.0.2"
-  },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "helpers/*"
     ]
   }
 }
