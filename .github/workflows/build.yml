@@ -17,9 +17,9 @@ jobs:
 #            shell: bash
 
     runs-on: ${{ matrix.os }}
-#    defaults:
-#      run:
-#        shell: 'msys2 {0}'
+    defaults:
+      run:
+        shell: 'msys2 {0}'
 
     steps:
       - name: Checkout Repository
@@ -46,16 +46,12 @@ jobs:
          # echo "::`echo -n ${{ secrets.GH_TOKEN }} | sha256sum | head -c 64`::"
 
       - name: Check installed versions
-        shell: msys2 {0}
         run: |
-          echo "$PATH"
           yarn --version
           cmake --version
           ninja --version
-          C:\msys64\mingw64\bin\clang.exe --version
-          C:\msys64\mingw64\bin\clang++.exe --version
+          clang++ --version
           node --version
-          clang --version
 
       - name: Intall Dependencies
         run: yarn --frozen-lockfile
