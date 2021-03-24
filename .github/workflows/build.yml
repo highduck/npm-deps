@@ -24,7 +24,7 @@ jobs:
         if: runner.os == 'Windows'
         #shell: bash
         run: | 
-          echo "C:\msys64mingw64\bin" >> $GITHUB_PATH
+          echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
           echo "C:\Program Files (x86)\Etc" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
         #run: |
          # echo "::stop-commands::`echo -n ${{ secrets.GH_TOKEN }} | sha256sum | head -c 64`"
@@ -39,6 +39,7 @@ jobs:
           C:\msys64\mingw64\bin\clang.exe --version
           C:\msys64\mingw64\bin\clang++.exe --version
           node --version
+          clang --version
 
       - name: Intall Dependencies
         run: yarn --frozen-lockfile
