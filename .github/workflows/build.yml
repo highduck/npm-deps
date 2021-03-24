@@ -25,7 +25,6 @@ jobs:
         #shell: bash
         run: | 
           echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
-          echo "C:\Program Files (x86)\Etc" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
         #run: |
          # echo "::stop-commands::`echo -n ${{ secrets.GH_TOKEN }} | sha256sum | head -c 64`"
          # echo "::add-path::C:\msys64\mingw64\bin"
@@ -33,6 +32,7 @@ jobs:
 
       - name: Check installed versions
         run: |
+          echo "$PATH"
           yarn --version
           cmake --version
           ninja --version
