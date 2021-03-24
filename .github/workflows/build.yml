@@ -8,18 +8,18 @@ jobs:
       matrix:
         #os: [ ubuntu-latest, macos-latest, windows-latest ]
         os: [ windows-latest ]
-        include:
-          - os: windows-latest
-            shell: msys2 {0}
+#        include:
+#          - os: windows-latest
+#            shell: msys2 {0}
 #          - os: ubuntu-latest
 #            shell: bash
 #          - os: macos-latest
 #            shell: bash
 
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: 'msys2 {0}'
+#    defaults:
+#      run:
+#        shell: 'msys2 {0}'
 
     steps:
       - name: Checkout Repository
@@ -28,6 +28,8 @@ jobs:
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - uses: msys2/setup-msys2@v2
+        if: runner.os == 'Windows'
       # https://github.com/actions/virtual-environments/issues/2257
       # https://stackoverflow.com/questions/63697371/how-to-use-clang-with-github-actions-on-windows
       #- name: Add clang path to $PATH env
@@ -41,6 +43,7 @@ jobs:
          # echo "::`echo -n ${{ secrets.GH_TOKEN }} | sha256sum | head -c 64`::"
 
       - name: Check installed versions
+        shell: msys2 {0}
         run: |
           echo "$PATH"
           yarn --version
