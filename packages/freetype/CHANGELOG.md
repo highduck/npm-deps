@@ -1,5 +1,11 @@
 # @ekx/freetype
 
+## 0.0.5
+
+### Patch Changes
+
+- 77ea1c7: enable stream support for loading font face by default
+
 ## 0.0.4
 
 ### Patch Changes
