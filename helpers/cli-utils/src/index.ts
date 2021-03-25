@@ -178,7 +178,7 @@ export function executeAsync(bin: string, args: string[], options?: ExecuteOptio
             cwd: options?.cwd
         });
         child.on('close', (code) => {
-            if (code === 0 || !!options.passExitCode) {
+            if (code === 0 || !!(options?.passExitCode)) {
                 resolve(code);
             } else {
                 reject('exit code: ' + code);

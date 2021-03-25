@@ -1,5 +1,4 @@
-const {existsSync, mkdirSync, rmSync, realpathSync} = require("fs");
-// const {spawnSync} = require("child_process");
+const {existsSync, mkdirSync, rmSync} = require("fs");
 const spawn = require('cross-spawn');
 
 console.info("sokol-shdc wrapper");
@@ -13,16 +12,13 @@ catch {
 }
 
 // we are in local environment, so use `yarn bin` (yarn v1) to find local package executable
-let bin = spawn.sync("yarn", ["bin", "sokol-shdc"], {encoding:'utf8'}).stdout;
-if(bin != null) {
-    bin = bin.split("\n").join("");
-}
-console.info("sokol-shdc.js path:", bin);
-// follow symlink
-// bin = fs.realpathSync(bin);
-// console.info("sokol-shdc.js real path:", bin);
+// let bin = spawn.sync("yarn", ["bin", "sokol-shdc"], {encoding:'utf8'}).stdout;
+// if(bin != null) {
+//     bin = bin.split("\n").join("");
+// }
+// console.info("sokol-shdc.js path:", bin);
 
-const r = spawn.sync(bin, [
+const r = spawn.sync("sokol-shdc", [
     "-i", "test/simple2d.glsl",
     "-o", "build/test-shader/simple2d_shader.h",
     "-l", "glsl330:glsl300es:glsl100:hlsl5:metal_ios:metal_sim:metal_macos",
@@ -32,10 +28,6 @@ const r = spawn.sync(bin, [
     stdio: "inherit",
     encoding:'utf8'
 });
-
-console.warn(r.stdout);
-console.warn(r.stderr);
-console.warn(r.status);
 
 if(r.status !== 0 && r.status !== 0xFFFFFFFF) {
     console.warn("sokol-shdc status:", r.status);
