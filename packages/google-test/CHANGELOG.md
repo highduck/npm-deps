@@ -1,5 +1,11 @@
 # @ekx/google-test
 
+## 0.0.5
+
+### Patch Changes
+
+- 68978a5: auto-update
+
 ## 0.0.4
 
 ### Patch Changes
