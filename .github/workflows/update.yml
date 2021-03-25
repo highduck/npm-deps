@@ -5,22 +5,15 @@ on: workflow_dispatch
 jobs:
   update:
     runs-on: ubuntu-latest
-    env:
-      UPDATE_BRANCH: update/${{ github.run_number }}
+#    env:
+#      UPDATE_BRANCH: update/${{ github.run_number }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_TOKEN }}
-          fetch-depth: 0
-
-      - name: Prepare branch
-        env:
-          RUN_NUMBER: ${{ github.run_number }}
-        run: |
-          git checkout -b $UPDATE_BRANCH
-          git config --global user.name 'Up Duck'
-          git config --global user.email 'highduck@users.noreply.github.com'
+          # enable for changes tracking
+          #fetch-depth: 0
 
       - name: Update
         run: |
@@ -28,11 +21,26 @@ jobs:
           yarn upgrade -L
           yarn run ci:build
           yarn run ci:build-recipes
+          git add -A
 
-      - name: Add Changeset
-        uses: generates/changeset-action@v2.0.1
+#      - name: Add Changeset
+#        uses: generates/changeset-action@v2.0.1
 
-      - name: Push update
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          commit-message: Packages auto-update
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          branch: update/${{ github.run_number }}
+          delete-branch: true
+          title: 'Packages auto-update'
+          labels: |
+            auto-update
+
+      - name: Check outputs
         run: |
-          git commit -am "packages auto-update"
-          git push --set-upstream origin $UPDATE_BRANCH
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
