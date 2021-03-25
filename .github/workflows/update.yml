@@ -1,0 +1,31 @@
+name: Update
+
+on: workflow_dispatch
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Prepare branch
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          git checkout -b update/${RUN_NUMBER}
+          git config --global user.name 'Up Duck'
+          git config --global user.email 'highduck@users.noreply.github.com'
+
+      - name: Update
+        run: |
+          yarn --frozen-lockfile
+          yarn run ci:build
+          yarn run ci:build-recipes
+
+      - name: Push update
+        run: |
+          git commit -am "packages auto-update"
+          git push

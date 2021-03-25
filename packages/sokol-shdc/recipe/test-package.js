@@ -15,8 +15,6 @@ const r = spawn.sync("sokol-shdc", [
     "-i", "test/simple2d.glsl",
     "-o", "build/test-shader/simple2d_shader.h",
     "-l", "glsl330:glsl300es:glsl100:hlsl5:metal_ios:metal_sim:metal_macos",
-    // "--bytecode",
-    // "--dump"
 ], {
     stdio: "inherit",
     encoding:'utf8'

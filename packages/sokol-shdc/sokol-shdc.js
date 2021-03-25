@@ -24,7 +24,7 @@ if (!executable) {
 }
 
 const status = spawnSync(exe, arguments, {
-    stdio:"inherit"
+    stdio: "inherit"
 }).status;
 
 process.exit(status);
