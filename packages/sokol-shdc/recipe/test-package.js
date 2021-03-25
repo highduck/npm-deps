@@ -1,6 +1,6 @@
 const {existsSync, mkdirSync, rmSync, realpathSync} = require("fs");
-const {spawnSync} = require("child_process");
-// const spawn = require('cross-spawn');
+// const {spawnSync} = require("child_process");
+const spawn = require('cross-spawn');
 
 console.info("sokol-shdc wrapper");
 
@@ -13,7 +13,7 @@ catch {
 }
 
 // we are in local environment, so use `yarn bin` (yarn v1) to find local package executable
-let bin = spawnSync("yarn", ["bin", "sokol-shdc"], {encoding:'utf8'}).stdout;
+let bin = spawn.sync("yarn", ["bin", "sokol-shdc"], {encoding:'utf8'}).stdout;
 if(bin != null) {
     bin = bin.split("\n").join("");
 }
@@ -22,7 +22,7 @@ console.info("sokol-shdc.js path:", bin);
 // bin = fs.realpathSync(bin);
 // console.info("sokol-shdc.js real path:", bin);
 
-const r = spawnSync(bin, [
+const r = spawn.sync(bin, [
     "-i", "test/simple2d.glsl",
     "-o", "build/test-shader/simple2d_shader.h",
     "-l", "glsl330:glsl300es:glsl100:hlsl5:metal_ios:metal_sim:metal_macos",
