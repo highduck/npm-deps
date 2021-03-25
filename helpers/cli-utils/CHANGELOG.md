@@ -1,5 +1,12 @@
 # @ekx/cli-utils
 
+## 0.0.5
+
+### Patch Changes
+
+- 85dbcb0: remove jobs count for ninja
+- 85dbcb0: test-package use CC and CXX defaults
+
 ## 0.0.4
 
 ### Patch Changes

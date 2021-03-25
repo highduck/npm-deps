@@ -1,5 +1,11 @@
 # @ekx/imgui
 
+## 0.0.6
+
+### Patch Changes
+
+- 85dbcb0: use npm to run npm-cmake
+
 ## 0.0.5
 
 ### Patch Changes

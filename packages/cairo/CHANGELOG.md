@@ -1,5 +1,11 @@
 # @ekx/cairo
 
+## 0.0.5
+
+### Patch Changes
+
+- 85dbcb0: fix \_WIN32 build, cleaning up source-code files
+
 ## 0.0.4
 
 ### Patch Changes

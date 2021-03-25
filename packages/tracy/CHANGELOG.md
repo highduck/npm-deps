@@ -1,5 +1,11 @@
 # @ekx/tracy
 
+## 0.0.6
+
+### Patch Changes
+
+- 85dbcb0: fix linking with libraries for cross-platform
+
 ## 0.0.5
 
 ### Patch Changes
