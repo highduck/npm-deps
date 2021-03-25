@@ -1,5 +1,11 @@
 # @ekx/freetype
 
+## 0.0.6
+
+### Patch Changes
+
+- rebuild recipe
+
 ## 0.0.5
 
 ### Patch Changes
