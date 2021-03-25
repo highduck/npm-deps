@@ -1,5 +1,11 @@
 # @ekx/tracy
 
+## 0.0.7
+
+### Patch Changes
+
+- 68978a5: auto-update
+
 ## 0.0.6
 
 ### Patch Changes
