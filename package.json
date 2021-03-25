@@ -10,7 +10,7 @@
     "postinstall": "wsrun -m postinstall",
     "ci:build": "wsrun -m -e -t build",
     "ci:build-recipes": "wsrun -m -e -t recipe:build",
-    "ci:test-packages": "wsrun -m -t package:test",
+    "ci:test-packages": "wsrun -m -e -t package:test",
     "repo:clean": "git clean -fdx",
     "check-install": "git clean -fdx && yarn --frozen-lockfile"
   },
