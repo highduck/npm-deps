@@ -2,12 +2,15 @@ name: Build
 
 on:
   push:
+    # auto-update branches checked by created PR
     branches-ignore:
-      # auto-update branches checked by created PR
       - 'update/*'
+    paths-ignore:
+      - '.changeset/**'
+
+  # only test check PR to master
   pull_request:
     branches:
-      # only test check PR to master
       - master
 
 jobs:
