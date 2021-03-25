@@ -5,9 +5,8 @@ import * as zlib from "zlib";
 import {ExtractOptions} from "tar";
 import {spawn} from "child_process";
 import * as crypto from 'crypto';
-import * as os from "os";
 
-//const lzma = require('lzma-native');
+const lzma = require('lzma-native');
 const tar = require('tar');
 
 export function makeDirs(dir: string) {
@@ -116,27 +115,27 @@ export function unpackTarXZ(packageTar: string, unpackTarget: string) {
     // "@types/lzma-native": "^4.0.0"
     // "lzma-native": "^7.0.1"
     // TODO: package build flow with separated dev module
-    throw new Error("LZMA is disabled temporary, unable to unpack XZ archive");
+    // throw new Error("LZMA is disabled temporary, unable to unpack XZ archive");
 
-    // const extractOpts: ExtractOptions = {cwd: unpackTarget, strip: 1};
-    // tar.extract(extractOpts);
-    // return new Promise((resolve, reject) => {
-    //     fs.createReadStream(packageTar)
-    //         .on('error', function (err) {
-    //             reject('Unable to open tarball ' + packageTar + ': ' + err);
-    //         })
-    //         .pipe(lzma.createDecompressor())
-    //         .on('error', function (err) {
-    //             reject('Error during unzip for ' + packageTar + ': ' + err);
-    //         })
-    //         .pipe(tar.extract(extractOpts))
-    //         .on('error', function (err) {
-    //             reject('Error during untar for ' + packageTar + ': ' + err);
-    //         })
-    //         .on('end', function (result) {
-    //             resolve(result)
-    //         });
-    // });
+    const extractOpts: ExtractOptions = {cwd: unpackTarget, strip: 1};
+    tar.extract(extractOpts);
+    return new Promise((resolve, reject) => {
+        fs.createReadStream(packageTar)
+            .on('error', function (err) {
+                reject('Unable to open tarball ' + packageTar + ': ' + err);
+            })
+            .pipe(lzma.createDecompressor())
+            .on('error', function (err) {
+                reject('Error during unzip for ' + packageTar + ': ' + err);
+            })
+            .pipe(tar.extract(extractOpts))
+            .on('error', function (err) {
+                reject('Error during untar for ' + packageTar + ': ' + err);
+            })
+            .on('end', function (result) {
+                resolve(result)
+            });
+    });
 }
 
 export async function downloadAndUnpackArtifact(url: string, destDir: string) {
@@ -167,7 +166,8 @@ const UtilityConfig = {
 
 export type ExecuteOptions = {
     cwd?: string,
-    verbose?: boolean
+    verbose?: boolean,
+    passExitCode?: boolean
 };
 
 export function executeAsync(bin: string, args: string[], options?: ExecuteOptions): Promise<number> {
@@ -178,7 +178,7 @@ export function executeAsync(bin: string, args: string[], options?: ExecuteOptio
             cwd: options?.cwd
         });
         child.on('close', (code) => {
-            if (code === 0) {
+            if (code === 0 || !!(options?.passExitCode)) {
                 resolve(code);
             } else {
                 reject('exit code: ' + code);
@@ -191,6 +191,8 @@ export function executeAsync(bin: string, args: string[], options?: ExecuteOptio
 export interface TestPackageOptions {
     target?: string | string[];
     buildType?: string | string[];
+    // set null to ignore
+    expectExitCode?: number | null
 }
 
 function resolveTestPackageOptions(optionsOrBuildTypes: [TestPackageOptions] | string[]) {
@@ -216,14 +218,16 @@ function resolveTestPackageOptions(optionsOrBuildTypes: [TestPackageOptions] | s
         options.target = [options.target];
     }
 
+    if (options.expectExitCode === undefined) {
+        options.expectExitCode = 0;
+    }
+
     return options;
 }
 
 function getBuildDir(project: string, buildType?: string): string {
     return path.join(process.cwd(), 'build', project, buildType?.toLowerCase());
 }
-
-const CPU_COUNT = os.cpus().length;
 
 export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] | string[]) {
     const options = resolveTestPackageOptions(optionsOrBuildTypes);
@@ -246,9 +250,7 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
             "./test",
             "-B", buildDir,
             "-G", "Ninja",
-            `-DCMAKE_BUILD_TYPE=${buildType}`,
-            '-DCMAKE_C_COMPILER=clang',
-            '-DCMAKE_CXX_COMPILER=clang++'
+            `-DCMAKE_BUILD_TYPE=${buildType}`
         ]);
     }
 
@@ -257,20 +259,35 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
         const buildDir = getBuildDir('test-package', buildType);
         await executeAsync("cmake", [
             "--build", buildDir,
-            "--parallel", Math.max(1, CPU_COUNT * 2).toString(),
             "--target", ...optionsTargets
         ]);
     }
 
+    let totalRun = 0;
+    let totalOK = 0;
+    let totalFailed = 0;
     // 4. execute targets
     for (const buildType of options.buildType) {
         const buildDir = getBuildDir('test-package', buildType);
         for (const target of optionsTargets) {
-            await executeAsync("./" + target, [], {
-                cwd: buildDir
+            const result = await executeAsync("./" + target, [], {
+                cwd: buildDir,
+                passExitCode: true
             });
+            console.info("Test run exit code:", result);
+            if (options.expectExitCode !== null &&
+                result != options.expectExitCode) {
+                console.error("Test run FAILED: exit code should be", options.expectExitCode);
+                ++totalFailed;
+            } else {
+                ++totalOK;
+            }
+            ++totalRun;
         }
     }
+
+    console.info("SUCCESSFUL TESTS:", totalOK, "/", totalRun);
+    console.warn("FAILED TESTS", totalFailed, "/", totalRun);
 
     // 5. clean
     try {

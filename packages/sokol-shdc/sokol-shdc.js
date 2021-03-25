@@ -5,6 +5,8 @@ const path = require("path");
 
 const arguments = process.argv.slice(2);
 
+console.info("sokol-shdc start on", process.platform);
+
 const executables = {
     darwin: 'bin/osx/sokol-shdc',
     linux: 'bin/linux/sokol-shdc',
@@ -12,16 +14,17 @@ const executables = {
 };
 
 const executable = executables[process.platform];
+const exe = path.join(__dirname, executable);
+console.info(exe, ...arguments);
+console.info("|cwd", process.cwd());
+
 if (!executable) {
-    throw new Error(`error: platform ${process.platform} is not supported`);
+    console.error(`error: platform ${process.platform} is not supported`);
+    process.exit(21);
 }
 
-const exe = path.join(__dirname, executable);
-console.log(exe, ...arguments);
-console.log("|cwd", process.cwd());
-
 const status = spawnSync(exe, arguments, {
-    stdio:"inherit"
+    stdio: "inherit"
 }).status;
 
 process.exit(status);

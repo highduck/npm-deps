@@ -3,7 +3,7 @@
   "version": "0.0.3",
   "main": "npm-cmake.js",
   "bin": {
-    "npm-cmake": "npm-cmake.js"
+    "npm-cmake": "./npm-cmake.js"
   },
   "files": [
     "npm-cmake.js"

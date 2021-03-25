@@ -1,5 +1,5 @@
 const {existsSync, mkdirSync, rmSync} = require("fs");
-const {spawnSync} = require("child_process");
+const spawn = require('cross-spawn');
 
 console.info("sokol-shdc wrapper");
 
@@ -11,18 +11,18 @@ catch {
     process.exit(-1);
 }
 
-const r = spawnSync("sokol-shdc", [
+const r = spawn.sync("sokol-shdc", [
     "-i", "test/simple2d.glsl",
     "-o", "build/test-shader/simple2d_shader.h",
-    "-l", "glsl330:glsl300es:glsl100",
-    "-b"
+    "-l", "glsl330:glsl300es:glsl100:hlsl5:metal_ios:metal_sim:metal_macos",
 ], {
-    stdio: "inherit"
+    stdio: "inherit",
+    encoding:'utf8'
 });
 
-if(r.status !== 0) {
-    console.error("fail execute sokol-shdc");
-    process.exit(-1);
+if(r.status !== 0 && r.status !== 0xFFFFFFFF) {
+    console.warn("sokol-shdc status:", r.status);
+    //process.exit(-1);
 }
 
 if(!existsSync("build/test-shader/simple2d_shader.h")) {

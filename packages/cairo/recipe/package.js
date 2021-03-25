@@ -31,6 +31,9 @@ async function run() {
 #define HAVE_UINT64_T 1
 #define HAVE_UINT128_T 0
 
+// required by cairo_fopen for _WIN32
+#define CAIRO_HAS_UTF8_TO_UTF16 1
+
 // ignore float pixel format
 #define PIXMAN_rgba_float 0xFFFFFFFF
 #define PIXMAN_rgb_float 0xFFFFFFFE
@@ -53,6 +56,13 @@ async function run() {
 
     copyFolderRecursiveSync("_dist/cairo/src", "src");
     copyFolderRecursiveSync("_dist/pixman/pixman", "src");
+
+    rimraf.sync("src/**/*.in");
+    rimraf.sync("src/**/*.sh");
+    rimraf.sync("src/**/*.awk");
+    rimraf.sync("src/**/*.build");
+    rimraf.sync("src/**/Makefile*");
+    rimraf.sync("src/**/README");
 }
 
 run().then();

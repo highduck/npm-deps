@@ -4,11 +4,20 @@ on: [ push, pull_request ]
 
 jobs:
   build:
+    # Thanks! https://github.com/msys2/setup-msys2/issues/102#issuecomment-757389495
+    runs-on: ${{ matrix.os.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
-
-    runs-on: ${{ matrix.os }}
+        os:
+          - { os: windows-latest, shell: msys2 }
+          - { os: ubuntu-latest,  shell: bash }
+          - { os: macos-latest,   shell: bash }
+    defaults:
+      run:
+        shell: '${{ matrix.os.shell }} {0}'
+    env:
+      CC: clang
+      CXX: clang++
 
     steps:
       - name: Checkout Repository
@@ -17,12 +26,18 @@ jobs:
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - uses: msys2/setup-msys2@v2
+        if: runner.os == 'Windows'
+        with:
+          path-type: inherit
+          release: false
+
       - name: Check installed versions
         run: |
           yarn --version
           cmake --version
           ninja --version
-          clang++ --version
+          node --version
 
       - name: Intall Dependencies
         run: yarn --frozen-lockfile

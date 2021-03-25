@@ -1,5 +1,6 @@
 const {testPackage} = require('@ekx/cli-utils');
 
 testPackage({
-    buildTypes: ['Release']
+    buildType: ['Release'],
+    expectExitCode: null
 }).then();
