@@ -1,5 +1,11 @@
 # @ekx/miniaudio
 
+## 0.0.4
+
+### Patch Changes
+
+- 85dbcb0: fix linking with libraries for cross-platform
+
 ## 0.0.3
 
 ### Patch Changes

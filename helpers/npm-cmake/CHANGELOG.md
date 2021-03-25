@@ -1,5 +1,11 @@
 # @ekx/npm-cmake
 
+## 0.0.4
+
+### Patch Changes
+
+- 85dbcb0: fix bin path
+
 ## 0.0.3
 
 ### Patch Changes

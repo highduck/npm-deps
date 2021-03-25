@@ -1,6 +1,6 @@
 {
   "name": "@ekx/google-benchmark",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "recipe:build": "node recipe/package.js",
     "package:test": "node recipe/test-package.js"
@@ -15,7 +15,7 @@
     "include"
   ],
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.4"
+    "@ekx/cli-utils": "0.0.5"
   },
   "dependencies": {}
 }

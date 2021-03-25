@@ -15,7 +15,7 @@
     "ek.js"
   ],
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.4"
+    "@ekx/cli-utils": "0.0.5"
   },
   "dependencies": {}
 }
