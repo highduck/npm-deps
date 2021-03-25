@@ -11,7 +11,9 @@ catch {
     process.exit(-1);
 }
 
-const r = spawnSync("sokol-shdc", [
+// we are in local environment, so use `yarn run` (yarn v1) to run local package executable
+const r = spawnSync("yarn", [
+    "run", "sokol-shdc",
     "-i", "test/simple2d.glsl",
     "-o", "build/test-shader/simple2d_shader.h",
     "-l", "glsl330:glsl300es:glsl100:hlsl5:metal_ios:metal_sim:metal_macos",
