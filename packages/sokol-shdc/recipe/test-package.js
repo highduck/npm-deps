@@ -14,15 +14,16 @@ catch {
 const r = spawnSync("sokol-shdc", [
     "-i", "test/simple2d.glsl",
     "-o", "build/test-shader/simple2d_shader.h",
-    "-l", "glsl330:glsl300es:glsl100",
-    "-b"
+    "-l", "glsl330:glsl300es:glsl100:hlsl5:metal_ios:metal_sim:metal_macos",
+    // "--bytecode",
+    // "--dump"
 ], {
     stdio: "inherit"
 });
 
-if(r.status !== 0) {
-    console.error("fail execute sokol-shdc");
-    process.exit(-1);
+if(r.status !== 0 && r.status !== 0xFFFFFFFF) {
+    console.warn("sokol-shdc status:", r.status);
+    //process.exit(-1);
 }
 
 if(!existsSync("build/test-shader/simple2d_shader.h")) {

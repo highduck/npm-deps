@@ -12,17 +12,12 @@ jobs:
           - { os: windows-latest, shell: msys2 }
           - { os: ubuntu-latest,  shell: bash }
           - { os: macos-latest,   shell: bash }
-        compiler:
-          - { cc: clang, cxx: clang++ }
-          - { cc: gcc,   cxx: g++ }
-
     defaults:
       run:
         shell: '${{ matrix.os.shell }} {0}'
-
     env:
-      CC: ${{ matrix.compiler.cc }}
-      CXX: ${{ matrix.compiler.cxx }}
+      CC: clang
+      CXX: clang++
 
     steps:
       - name: Checkout Repository
