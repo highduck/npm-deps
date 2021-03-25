@@ -5,6 +5,8 @@ on: workflow_dispatch
 jobs:
   update:
     runs-on: ubuntu-latest
+    env:
+      UPDATE_BRANCH: update/${{ github.run_number }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -15,7 +17,7 @@ jobs:
         env:
           RUN_NUMBER: ${{ github.run_number }}
         run: |
-          git checkout -b update/${RUN_NUMBER}
+          git checkout -b $UPDATE_BRANCH
           git config --global user.name 'Up Duck'
           git config --global user.email 'highduck@users.noreply.github.com'
 
@@ -28,4 +30,4 @@ jobs:
       - name: Push update
         run: |
           git commit -am "packages auto-update"
-          git push
+          git push --set-upstream origin $UPDATE_BRANCH
