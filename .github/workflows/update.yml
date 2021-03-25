@@ -12,6 +12,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_TOKEN }}
+          fetch-depth: 0
 
       - name: Prepare branch
         env:
@@ -24,8 +25,12 @@ jobs:
       - name: Update
         run: |
           yarn --frozen-lockfile
+          yarn upgrade -L
           yarn run ci:build
           yarn run ci:build-recipes
+
+      - name: Add Changeset
+        uses: generates/changeset-action@v2.0.1
 
       - name: Push update
         run: |

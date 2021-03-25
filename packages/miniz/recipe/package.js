@@ -19,14 +19,14 @@ async function run() {
         ]
     });
 
-    await fs.promises.writeFile("../miniz/src/miniz_export.h", `
+    await fs.promises.writeFile("src/miniz_export.h", `
 #ifndef MINIZ_EXPORT
 #define MINIZ_EXPORT
 #endif
 `);
 
-    let miniz_zip = fs.readFileSync("../miniz/src/miniz_zip.c", "utf8");
-    const miniz_zip_patched = miniz_zip.replaceAll(`cdir_ofs = MZ_READ_LE32(pBuf + MZ_ZIP_ECDH_CDIR_OFS_OFS);`,
+    let miniz_zip = fs.readFileSync("src/miniz_zip.c", "utf8");
+    const miniz_zip_patched = miniz_zip.replace(`cdir_ofs = MZ_READ_LE32(pBuf + MZ_ZIP_ECDH_CDIR_OFS_OFS);`,
         `
     // patch
     cdir_ofs = MZ_READ_LE32(pBuf + MZ_ZIP_ECDH_CDIR_OFS_OFS);
@@ -36,12 +36,14 @@ async function run() {
 `);
 
     if (miniz_zip_patched === miniz_zip) {
-        throw new Error("Can't patch miniz_zip.c");
+        console.error("Can't patch miniz_zip.c");
+        process.exit(-2);
     }
 
-    fs.writeFileSync("../miniz/src/miniz_zip.c", miniz_zip_patched, "utf8");
+    fs.writeFileSync("src/miniz_zip.c", miniz_zip_patched, "utf8");
 
     console.info("miniz_zip.c patched");
+    process.exit(0);
 }
 
 run().then();

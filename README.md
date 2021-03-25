@@ -2,6 +2,8 @@
 
 C++ modules via NPM packages
 
+[![Build](https://github.com/highduck/npm-deps/actions/workflows/build.yml/badge.svg)](https://github.com/highduck/npm-deps/actions/workflows/build.yml)
+
 ## Versions
 
 - package version **is not equal** to packaged library version
