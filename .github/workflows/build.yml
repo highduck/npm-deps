@@ -1,6 +1,14 @@
 name: Build
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches-ignore:
+      # auto-update branches checked by created PR
+      - 'update/*'
+  pull_request:
+    branches:
+      # only test check PR to master
+      - master
 
 jobs:
   build:
