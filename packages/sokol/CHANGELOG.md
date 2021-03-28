@@ -1,5 +1,11 @@
 # @ekx/sokol
 
+## 0.0.5
+
+### Patch Changes
+
+- 42fd3df: auto-update
+
 ## 0.0.4
 
 ### Patch Changes
