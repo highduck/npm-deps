@@ -37,6 +37,11 @@ jobs:
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - name: Setup CCache
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: ${{ runner.os }}
+
       - uses: msys2/setup-msys2@v2
         if: runner.os == 'Windows'
         with:
@@ -53,8 +58,10 @@ jobs:
       - name: Intall Dependencies
         run: yarn --frozen-lockfile
 
-      - name: Build
-        run: yarn run ci:build
+      - name: Build and Test managed libraries
+        run: |
+          yarn run ci:build
+          yarn run ci:test
 
       - name: Test Packages
         run: yarn run ci:test-packages

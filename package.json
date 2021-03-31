@@ -9,8 +9,9 @@
     "dev:check-ci": "wsrun -m build && wsrun -m recipe:build && wsrun -m package:test",
     "postinstall": "wsrun -m postinstall",
     "ci:build": "wsrun -m -e -t build",
+    "ci:test": "wsrun -m -e -t test",
     "ci:build-recipes": "wsrun -m -e -t recipe:build",
-    "ci:test-packages": "wsrun -m -e -t package:test",
+    "ci:test-packages": "USE_CCACHE=1 wsrun -m -e -t package:test",
     "repo:clean": "git clean -fdx",
     "check-install": "git clean -fdx && yarn --frozen-lockfile"
   },

@@ -11,7 +11,7 @@ catch {
     process.exit(-1);
 }
 
-const r = spawn.sync("sokol-shdc", [
+const r = spawn.sync("./sokol-shdc.js", [
     "-i", "test/simple2d.glsl",
     "-o", "build/test-shader/simple2d_shader.h",
     "-l", "glsl330:glsl300es:glsl100:hlsl5:metal_ios:metal_sim:metal_macos",

@@ -1,7 +1,10 @@
 {
   "name": "npm-cmake",
   "version": "0.0.4",
-  "main": "npm-cmake.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test.js"
+  },
   "bin": {
     "npm-cmake": "./npm-cmake.js"
   },

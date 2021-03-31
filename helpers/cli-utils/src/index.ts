@@ -246,11 +246,16 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
     // 2. configure
     for (const buildType of options.buildType) {
         const buildDir = getBuildDir('test-package', buildType);
+        const args = [];
+        if(process.env.USE_CCACHE) {
+            args.push("-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache");
+        }
         await executeAsync("cmake", [
             "./test",
             "-B", buildDir,
             "-G", "Ninja",
-            `-DCMAKE_BUILD_TYPE=${buildType}`
+            `-DCMAKE_BUILD_TYPE=${buildType}`,
+            ...args
         ]);
     }
 
