@@ -1,5 +1,11 @@
 # @ekx/cli-utils
 
+## 0.0.6
+
+### Patch Changes
+
+- 4af63cc: add ccache support for cmake package test, use env variable USE_CCACHE=1
+
 ## 0.0.5
 
 ### Patch Changes

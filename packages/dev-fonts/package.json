@@ -15,7 +15,7 @@
     "ttf"
   ],
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.5"
+    "@ekx/cli-utils": "0.0.6"
   },
   "dependencies": {}
 }
