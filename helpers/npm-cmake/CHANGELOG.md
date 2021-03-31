@@ -1,5 +1,11 @@
 # @ekx/npm-cmake
 
+## 0.0.5
+
+### Patch Changes
+
+- 4af63cc: dev dependencies cmake modules, tests
+
 ## 0.0.4
 
 ### Patch Changes
