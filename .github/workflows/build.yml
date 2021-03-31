@@ -51,9 +51,10 @@ jobs:
       - name: Check installed versions
         run: |
           yarn --version
+          node --version
           cmake --version
           ninja --version
-          node --version
+          ccache --version
 
       - name: Intall Dependencies
         run: yarn --frozen-lockfile
