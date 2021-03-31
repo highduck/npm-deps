@@ -58,10 +58,11 @@ jobs:
       - name: Intall Dependencies
         run: yarn --frozen-lockfile
 
-      - name: Build and Test managed libraries
-        run: |
-          yarn run ci:build
-          yarn run ci:test
+      - name: Build helpers
+        run: yarn run ci:build
+
+      - name: Test helpers
+        run: yarn run ci:test
 
       - name: Test Packages
         run: yarn run ci:test-packages
