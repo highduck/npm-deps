@@ -44,6 +44,7 @@ jobs:
         uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Setup CCache
+        if: runner.os != 'Windows'
         uses: eliasku/ccache-action@main
         with:
           key: ${{ runner.os }}
@@ -54,7 +55,6 @@ jobs:
           node --version
           cmake --version
           ninja --version
-          ccache --version
 
       - name: Intall Dependencies
         run: yarn --frozen-lockfile
@@ -65,5 +65,11 @@ jobs:
       - name: Test helpers
         run: yarn run ci:test
 
-      - name: Test Packages
+
+      - name: Test Packages without CCACHE
+        if: runner.os == 'Windows'
         run: yarn run ci:test-packages
+
+      - name: Test Packages
+        if: runner.os != 'Windows'
+        run: USE_CCACHE=1 yarn run ci:test-packages
