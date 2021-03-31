@@ -37,6 +37,10 @@ jobs:
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - name: Windows install CCache
+        if: runner.os == 'Windows'
+        run: choco install ccache
+
       - name: Setup CCache
         uses: hendrikmuhs/ccache-action@v1
         with:
