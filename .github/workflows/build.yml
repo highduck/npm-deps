@@ -45,7 +45,7 @@ jobs:
 
       - name: Windows install CCache
         if: runner.os == 'Windows'
-        run: choco install ccache
+        run: choco install --yes ccache
 
       - name: Setup CCache
         uses: hendrikmuhs/ccache-action@v1
