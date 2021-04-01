@@ -51,13 +51,6 @@ jobs:
         with:
           key: ${{ runner.os }}
 
-      - name: Check installed versions
-        run: |
-          yarn --version
-          node --version
-          cmake --version
-          ninja --version
-
       - name: Intall Dependencies
         run: yarn --frozen-lockfile
 
@@ -67,10 +60,5 @@ jobs:
       - name: Test helpers
         run: yarn run ci:test
 
-#      - name: Test Packages without CCACHE
-#        if: runner.os == 'Windows'
-#        run: yarn run ci:test-packages
-
       - name: Test Packages
-        if: runner.os != 'Windows'
         run: USE_CCACHE=1 yarn run ci:test-packages
