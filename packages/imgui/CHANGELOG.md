@@ -1,5 +1,11 @@
 # @ekx/imgui
 
+## 0.0.10
+
+### Patch Changes
+
+- 4a870a0: auto update
+
 ## 0.0.9
 
 ### Patch Changes

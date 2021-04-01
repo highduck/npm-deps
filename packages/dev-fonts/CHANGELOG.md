@@ -1,5 +1,11 @@
 # @ekx/dev-fonts
 
+## 0.0.4
+
+### Patch Changes
+
+- 4a870a0: auto update
+
 ## 0.0.3
 
 ### Patch Changes

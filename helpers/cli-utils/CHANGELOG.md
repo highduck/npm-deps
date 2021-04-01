@@ -1,5 +1,11 @@
 # @ekx/cli-utils
 
+## 0.0.8
+
+### Patch Changes
+
+- a9f9a95: remove default verbose option from untar function
+
 ## 0.0.7
 
 ### Patch Changes
