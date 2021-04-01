@@ -33,7 +33,7 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           #branch: update/${{ github.run_number }}
-          branch: update/${GITHUB_REF##*/}
+          branch: update/master
           delete-branch: true
           title: 'Packages auto-update'
           labels: |
