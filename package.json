@@ -13,11 +13,13 @@
     "ci:build-recipes": "wsrun -m -e -t recipe:build",
     "ci:test-packages": "wsrun -m -e -t package:test",
     "repo:clean": "git clean -fdx",
-    "check-install": "git clean -fdx && yarn --frozen-lockfile"
+    "check-install": "git clean -fdx && yarn --frozen-lockfile",
+    "ci:complete-auto-update": "node auto-update.js"
   },
   "dependencies": {
     "@changesets/cli": "^2.14.1",
-    "wsrun": "^5.2.4"
+    "wsrun": "^5.2.4",
+    "glob": "^7.1.6"
   },
   "workspaces": {
     "packages": [

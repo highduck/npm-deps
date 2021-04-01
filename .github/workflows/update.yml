@@ -20,9 +20,7 @@ jobs:
           yarn run ci:build
           yarn run ci:build-recipes
           git add -A
-
-#      - name: Add Changeset
-#        uses: generates/changeset-action@v2.0.1
+          node auto-update.js
 
       - name: Create Pull Request
         id: cpr
