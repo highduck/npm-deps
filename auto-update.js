@@ -15,8 +15,10 @@ for(const pattern of rootPkg.workspaces.packages) {
 const changedPackages = [];
 
 for(const workspace of workspaces) {
-    console.info("check:", workspace);
-    if(spawnSync("git", ["diff", "--quiet", path.dirname(workspace)]).status === 1) {
+    const dir = path.dirname(workspace);
+    const exitCode = spawnSync("git", ["diff", "--quiet", "--cached", dir]).status;
+    console.info("staged changes:", exitCode, dir);
+    if(exitCode !== 0) {
         const pkgText = readFileSync(workspace, 'utf8');
         const pkg = JSON.parse(pkgText);
         console.info("changed:", pkg.name);
