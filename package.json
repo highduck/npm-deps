@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@changesets/cli": "^2.14.1",
-    "wsrun": "^5.2.4",
-    "glob": "^7.1.6"
+    "glob": "^7.1.6",
+    "wsrun": "^5.2.4"
   },
   "workspaces": {
     "packages": [
