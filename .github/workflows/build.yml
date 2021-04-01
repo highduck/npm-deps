@@ -47,7 +47,7 @@ jobs:
         uses: eliasku/install-ccache-action@master
 
       - name: Setup CCache
-        uses: hendrikmuhs/ccache-action@main
+        uses: elisku/ccache-action@master
         with:
           key: ${{ runner.os }}
 
