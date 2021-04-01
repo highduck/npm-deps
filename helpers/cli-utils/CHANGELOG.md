@@ -1,5 +1,11 @@
 # @ekx/cli-utils
 
+## 0.0.7
+
+### Patch Changes
+
+- 2a80a8f: remove lzma and tar packages, use tar command to unpack
+
 ## 0.0.6
 
 ### Patch Changes

@@ -15,7 +15,7 @@
     "include"
   ],
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.6"
+    "@ekx/cli-utils": "0.0.7"
   },
   "dependencies": {}
 }

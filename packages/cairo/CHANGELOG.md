@@ -1,5 +1,11 @@
 # @ekx/cairo
 
+## 0.0.6
+
+### Patch Changes
+
+- 2a80a8f: package script update
+
 ## 0.0.5
 
 ### Patch Changes
