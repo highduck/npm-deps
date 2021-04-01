@@ -1,13 +1,8 @@
 import {https} from 'follow-redirects';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as zlib from "zlib";
-import {ExtractOptions} from "tar";
 import {spawn} from "child_process";
 import * as crypto from 'crypto';
-
-const lzma = require('lzma-native');
-const tar = require('tar');
 
 export function makeDirs(dir: string) {
     if (!fs.existsSync(dir)) {
@@ -88,61 +83,20 @@ export function downloadFiles(props: DownloadOptions) {
     return Promise.all(tasks);
 }
 
-export function unpackTgz(packageTgz: string, unpackTarget: string) {
-    const extractOpts: ExtractOptions = {cwd: unpackTarget, strip: 1};
-
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(packageTgz)
-            .on('error', function (err) {
-                reject('Unable to open tarball ' + packageTgz + ': ' + err);
-            })
-            .pipe(zlib.createUnzip())
-            .on('error', function (err) {
-                reject('Error during unzip for ' + packageTgz + ': ' + err);
-            })
-            .pipe(tar.extract(extractOpts))
-            .on('error', function (err) {
-                reject('Error during untar for ' + packageTgz + ': ' + err);
-            })
-            .on('end', function (result) {
-                resolve(result)
-            });
-    })
-}
-
-export function unpackTarXZ(packageTar: string, unpackTarget: string) {
-
-    // "@types/lzma-native": "^4.0.0"
-    // "lzma-native": "^7.0.1"
-    // TODO: package build flow with separated dev module
-    // throw new Error("LZMA is disabled temporary, unable to unpack XZ archive");
-
-    const extractOpts: ExtractOptions = {cwd: unpackTarget, strip: 1};
-    tar.extract(extractOpts);
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(packageTar)
-            .on('error', function (err) {
-                reject('Unable to open tarball ' + packageTar + ': ' + err);
-            })
-            .pipe(lzma.createDecompressor())
-            .on('error', function (err) {
-                reject('Error during unzip for ' + packageTar + ': ' + err);
-            })
-            .pipe(tar.extract(extractOpts))
-            .on('error', function (err) {
-                reject('Error during untar for ' + packageTar + ': ' + err);
-            })
-            .on('end', function (result) {
-                resolve(result)
-            });
-    });
+export function untar(archivePath:string, dest:string, options?:{strip?:number}):Promise<number> {
+    const args = [];
+    if(options && options.strip != null) {
+        args.push(`--strip-components=${options.strip}`);
+    }
+    makeDirs(dest);
+    return executeAsync("tar", ["-x", "-v", "-f", archivePath, ...args, "-C", dest]);
 }
 
 export async function downloadAndUnpackArtifact(url: string, destDir: string) {
     const name = path.basename(url);
     const archivePath = path.join(destDir, name);
     await downloadFile(url, archivePath);
-    await unpackTgz(archivePath, "./" + destDir);
+    await untar(archivePath, "./" + destDir);
     await fs.rmSync(archivePath);
 }
 

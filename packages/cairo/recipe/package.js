@@ -1,26 +1,24 @@
-const {downloadCheck, unpackTarXZ,unpackTgz, makeDirs, copyFolderRecursiveSync} = require('@ekx/cli-utils');
+const {downloadCheck, untar, copyFolderRecursiveSync} = require('@ekx/cli-utils');
 const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
 
+async function downloadCairo() {
+    const url = "https://www.cairographics.org/snapshots/cairo-1.17.4.tar.xz";
+    const sha1 = "68712ae1039b114347be3b7200bc1c901d47a636";
+    await downloadCheck(url, "_dist", sha1);
+    await untar("_dist/" + path.basename(url), "_dist/cairo", {strip: 1});
+}
+
+async function downloadPixMan() {
+    const url = "https://www.cairographics.org/snapshots/pixman-0.33.6.tar.gz";
+    const sha1 = "f174d00517e7e1d81c90c65efc20dd876877d904";
+    await downloadCheck(url, "_dist", sha1);
+    await untar("_dist/" + path.basename(url), "_dist/pixman", {strip: 1});
+}
+
 async function run() {
-    {
-        const url = "https://www.cairographics.org/snapshots/cairo-1.17.4.tar.xz";
-        const sha1 = "68712ae1039b114347be3b7200bc1c901d47a636";
-
-        await downloadCheck(url, "_dist", sha1);
-        makeDirs("_dist/cairo");
-        await unpackTarXZ("_dist/" + path.basename(url), "_dist/cairo");
-    }
-
-    {
-        const url = "https://www.cairographics.org/snapshots/pixman-0.33.6.tar.gz";
-        const sha1 = "f174d00517e7e1d81c90c65efc20dd876877d904";
-
-        await downloadCheck(url, "_dist", sha1);
-        makeDirs("_dist/pixman");
-        await unpackTgz("_dist/" + path.basename(url), "_dist/pixman");
-    }
+    await Promise.all([downloadCairo(), downloadPixMan()]);
 
     fs.writeFileSync("_dist/cairo/src/cairo-features.h", `#ifndef CAIRO_FEATURES_H
 #define CAIRO_FEATURES_H
