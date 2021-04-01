@@ -89,7 +89,7 @@ export function untar(archivePath:string, dest:string, options?:{strip?:number})
         args.push(`--strip-components=${options.strip}`);
     }
     makeDirs(dest);
-    return executeAsync("tar", ["-x", "-v", "-f", archivePath, ...args, "-C", dest]);
+    return executeAsync("tar", ["-x", "-f", archivePath, ...args, "-C", dest]);
 }
 
 export async function downloadAndUnpackArtifact(url: string, destDir: string) {
