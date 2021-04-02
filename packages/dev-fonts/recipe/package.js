@@ -21,7 +21,7 @@ async function run() {
             ]
         }),
         downloadFiles({
-            srcBaseUrl: `https://github.com/juliettef/IconFontCppHeaders/raw/master`,
+            srcBaseUrl: `https://github.com/juliettef/IconFontCppHeaders/raw/main`,
             destPath: "src",
             fileList: [
                 "IconsFontAwesome5.h"
