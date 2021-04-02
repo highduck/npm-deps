@@ -1,5 +1,11 @@
 # @ekx/dev-fonts
 
+## 0.0.5
+
+### Patch Changes
+
+- 4360644: fix recipe and header file
+
 ## 0.0.4
 
 ### Patch Changes
