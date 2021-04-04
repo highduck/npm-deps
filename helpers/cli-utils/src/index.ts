@@ -205,7 +205,7 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
             args.push("-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache");
         }
         await executeAsync("cmake", [
-            "./test",
+            "-S", "./test",
             "-B", buildDir,
             "-G", "Ninja",
             `-DCMAKE_BUILD_TYPE=${buildType}`,
