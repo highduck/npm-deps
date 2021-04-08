@@ -1,5 +1,11 @@
 # @ekx/freetype
 
+## 0.0.7
+
+### Patch Changes
+
+- 8d4df78: minor update
+
 ## 0.0.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @ekx/cli-utils
 
+## 0.0.9
+
+### Patch Changes
+
+- 8d4df78: minor update
+
 ## 0.0.8
 
 ### Patch Changes

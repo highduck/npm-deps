@@ -1,5 +1,13 @@
 # @ekx/imgui
 
+## 0.0.11
+
+### Patch Changes
+
+- 8d4df78: minor update
+- Updated dependencies [8d4df78]
+  - @ekx/freetype@0.0.7
+
 ## 0.0.10
 
 ### Patch Changes
