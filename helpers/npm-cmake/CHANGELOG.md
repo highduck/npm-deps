@@ -1,5 +1,11 @@
 # @ekx/npm-cmake
 
+## 0.0.8
+
+### Patch Changes
+
+- 31a84c8: add status messages on linking stage
+
 ## 0.0.7
 
 ### Patch Changes
