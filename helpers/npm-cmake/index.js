@@ -42,8 +42,11 @@ function convertPackageName(name) {
 function dependencyBlock(name, dep, rel, dir) {
     return `# ${dep} => ${name}
 if(NOT TARGET ${name})
-    file(TO_NATIVE_PATH "${rel}" MODULE_PATH_CONVERTED)
+    file(TO_CMAKE_PATH "${rel}" MODULE_PATH_CONVERTED)
     add_subdirectory(\${MODULE_PATH_CONVERTED} ${dir})
+    message(STATUS "Add target '${name}' for NPM module '${dep}' to: " \${MODULE_PATH_CONVERTED})
+else()
+    message(STATUS "Skip. Target '${name}' for NPM module '${dep}' already defined")
 endif()`
 }
 
