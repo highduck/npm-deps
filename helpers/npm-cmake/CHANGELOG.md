@@ -1,5 +1,11 @@
 # @ekx/npm-cmake
 
+## 0.0.10
+
+### Patch Changes
+
+- e6f854d: Fix backslash for win32
+
 ## 0.0.9
 
 ### Patch Changes

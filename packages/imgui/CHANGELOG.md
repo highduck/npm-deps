@@ -1,5 +1,13 @@
 # @ekx/imgui
 
+## 0.0.12
+
+### Patch Changes
+
+- e6f854d: Add missing npm-cmake dependency
+- Updated dependencies [e6f854d]
+  - npm-cmake@0.0.10
+
 ## 0.0.11
 
 ### Patch Changes
