@@ -1,5 +1,11 @@
 # @ekx/npm-cmake
 
+## 0.0.7
+
+### Patch Changes
+
+- 4ba0e3a: add cmake path conversion for win32
+
 ## 0.0.6
 
 ### Patch Changes
