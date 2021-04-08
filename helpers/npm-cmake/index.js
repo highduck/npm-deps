@@ -66,15 +66,18 @@ function collectDependencies(dependencies, output) {
     }
 }
 
-function readPkg(p) {
+function readPkg(dir) {
     // read current package.json
     let pkg = null;
+    let p = "package.json";
+    if(dir != null) {
+        p = path.join(dir, p);
+    }
     try {
-        const p = path.join(p, "package.json");
         const text = fs.readFileSync(p, 'utf8');
         pkg = JSON.parse(text);
     } catch {
-        console.error("error reading package.json");
+        console.error("error reading 'package.json' from ", p);
     }
     return pkg;
 }
