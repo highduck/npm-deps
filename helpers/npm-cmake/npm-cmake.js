@@ -2,23 +2,22 @@
 
 'use strict';
 
-const {collectDependencies} = require('./index.js');
+const {collectDependencies, readPkg} = require('./index.js');
 const fs = require("fs");
-const path = require("path");
 
 // read current package.json
-let pkg = null;
-try {
-    const p = path.join(process.cwd(), "package.json");
-    const text = fs.readFileSync(p, 'utf8');
-    pkg = JSON.parse(text);
+const pkg = readPkg(process.cwd());
+if(pkg == null) {
+    process.exit(1);
 }
-catch {
-    console.error("error reading package.json");
-    return;
+const cmakeModuleParts = [];
+
+const selfPkg = readPkg(__dirname);
+if(selfPkg != null && selfPkg.version) {
+    cmakeModuleParts.push(`message(STATUS "npm to cmake generator: ${selfPkg.name}@${selfPkg.version}")`);
 }
 
-const cmakeModuleParts = [];
+cmakeModuleParts.push(`message(STATUS "package: ${pkg.name}@${pkg.version}")`);
 
 cmakeModuleParts.push("# dependencies\n");
 collectDependencies(pkg.dependencies, cmakeModuleParts);

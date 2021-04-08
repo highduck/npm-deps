@@ -42,7 +42,7 @@ function convertPackageName(name) {
 function dependencyBlock(name, dep, rel, dir) {
     return `# ${dep} => ${name}
 if(NOT TARGET ${name})
-    file(TO_CMAKE_PATH "${rel}" MODULE_PATH_CONVERTED)
+    file(TO_CMAKE_PATH "${rel.replace(/\//g, "//")}" MODULE_PATH_CONVERTED)
     add_subdirectory(\${MODULE_PATH_CONVERTED} ${dir})
     message(STATUS "Add target '${name}' for NPM module '${dep}' to: " \${MODULE_PATH_CONVERTED})
 else()
@@ -66,9 +66,23 @@ function collectDependencies(dependencies, output) {
     }
 }
 
+function readPkg(p) {
+    // read current package.json
+    let pkg = null;
+    try {
+        const p = path.join(p, "package.json");
+        const text = fs.readFileSync(p, 'utf8');
+        pkg = JSON.parse(text);
+    } catch {
+        console.error("error reading package.json");
+    }
+    return pkg;
+}
+
 module.exports = {
     resolveFrom,
     convertPackageName,
     dependencyBlock,
-    collectDependencies
+    collectDependencies,
+    readPkg
 };
