@@ -1,3 +1,3 @@
 const {testPackage} = require('@ekx/cli-utils');
 
-testPackage().then();
+testPackage().catch(() => process.exit(1));

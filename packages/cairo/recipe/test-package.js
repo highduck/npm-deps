@@ -4,4 +4,4 @@ async function run() {
     await testPackage('Debug', 'Release');
 }
 
-run().then();
+run().catch(() => process.exit(1));

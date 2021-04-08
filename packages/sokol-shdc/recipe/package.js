@@ -17,4 +17,4 @@ async function run() {
     chmodSync("bin/win32/sokol-shdc.exe", 0o755);
 }
 
-run().then();
+run().catch(() => process.exit(1));

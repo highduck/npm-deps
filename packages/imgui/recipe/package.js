@@ -37,4 +37,4 @@ async function run() {
     fs.writeFileSync("src/imconfig.h", imguiconfig);
 }
 
-run().then();
+run().catch(() => process.exit(1));

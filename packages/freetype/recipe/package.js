@@ -13,4 +13,4 @@ async function run() {
     rimraf.sync("src/**/README");
 }
 
-run().then();
+run().catch(() => process.exit(1));

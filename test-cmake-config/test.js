@@ -14,4 +14,4 @@ async function run() {
     ]);
 }
 
-run().then();
+run().catch(() => process.exit(1));

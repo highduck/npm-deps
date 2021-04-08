@@ -31,4 +31,4 @@ async function run() {
     return Promise.all(tasks);
 }
 
-run().then();
+run().catch(() => process.exit(1));

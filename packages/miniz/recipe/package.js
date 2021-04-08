@@ -46,4 +46,4 @@ async function run() {
     process.exit(0);
 }
 
-run().then();
+run().catch(() => process.exit(1));
