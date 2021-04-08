@@ -1,6 +1,6 @@
 {
   "name": "@ekx/imgui",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "scripts": {
     "recipe:build": "node recipe/package.js",
     "package:test": "node recipe/test-package.js",
@@ -18,7 +18,7 @@
     "@ekx/cli-utils": "0.0.9"
   },
   "dependencies": {
-    "npm-cmake": "0.0.9",
+    "npm-cmake": "0.0.10",
     "@ekx/freetype": "0.0.7",
     "@ekx/stb": "0.0.3"
   }
