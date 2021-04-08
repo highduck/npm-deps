@@ -1,5 +1,12 @@
 # @ekx/npm-cmake
 
+## 0.0.9
+
+### Patch Changes
+
+- a2030a5: add escape slash for win32, add more status messages to debug target package and generator version
+- 76c99ba: fix reading package json
+
 ## 0.0.8
 
 ### Patch Changes
