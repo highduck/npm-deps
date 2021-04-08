@@ -1,0 +1,28 @@
+{
+  "name": "@ekx/npm-deps-test",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test:configuration": "node ./test.js",
+    "postinstall": "npm-cmake || exit 0"
+  },
+  "devDependencies": {
+    "@ekx/cli-utils": "*",
+    "npm-cmake": "*"
+  },
+  "dependencies": {
+    "@ekx/dev-fonts": "*",
+    "@ekx/google-test": "*",
+    "@ekx/google-benchmark": "*",
+    "@ekx/freetype": "*",
+    "@ekx/cairo": "*",
+    "@ekx/stb": "*",
+    "@ekx/imgui": "*",
+    "@ekx/miniaudio": "*",
+    "@ekx/miniz": "*",
+    "@ekx/pugixml": "*",
+    "@ekx/sokol": "*",
+    "@ekx/sokol-shdc": "*",
+    "@ekx/tracy": "*"
+  }
+}

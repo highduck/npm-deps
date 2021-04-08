@@ -42,7 +42,8 @@ function convertPackageName(name) {
 function dependencyBlock(name, dep, rel, dir) {
     return `# ${dep} => ${name}
 if(NOT TARGET ${name})
-    add_subdirectory("${rel}" ${dir})
+    file(TO_NATIVE_PATH "${rel}" MODULE_PATH_CONVERTED)
+    add_subdirectory(\${MODULE_PATH_CONVERTED} ${dir})
 endif()`
 }
 

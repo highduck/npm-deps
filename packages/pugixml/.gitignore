@@ -2,3 +2,4 @@ node_modules/
 build/
 cmake-*/
 _dist/
+npm.cmake
