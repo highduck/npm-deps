@@ -1,6 +1,6 @@
 {
   "name": "@ekx/dev-fonts",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "scripts": {
     "recipe:build": "node recipe/package.js",
     "package:test": "node recipe/test-package.js"
@@ -15,7 +15,7 @@
     "ttf"
   ],
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.8"
+    "@ekx/cli-utils": "0.0.9"
   },
   "dependencies": {}
 }

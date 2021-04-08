@@ -1,5 +1,11 @@
 # @ekx/npm-cmake
 
+## 0.0.6
+
+### Patch Changes
+
+- 1e6de52: quote generated path
+
 ## 0.0.5
 
 ### Patch Changes
