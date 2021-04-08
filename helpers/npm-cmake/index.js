@@ -42,11 +42,10 @@ function convertPackageName(name) {
 function dependencyBlock(name, dep, rel, dir) {
     return `# ${dep} => ${name}
 if(NOT TARGET ${name})
-    file(TO_CMAKE_PATH "${rel.replace(/\//g, "//")}" MODULE_PATH_CONVERTED)
-    add_subdirectory(\${MODULE_PATH_CONVERTED} ${dir})
-    message(STATUS "Add target '${name}' for NPM module '${dep}' to: " \${MODULE_PATH_CONVERTED})
+    add_subdirectory(${rel} ${dir})
+    message(STATUS "Add NPM module '${dep}' target '${name}' from directory: ${rel}")
 else()
-    message(STATUS "Skip. Target '${name}' for NPM module '${dep}' already defined")
+    message(STATUS "Skip NPM module '${dep}'. Target '${name}' already defined")
 endif()`
 }
 
@@ -54,13 +53,17 @@ function collectDependencies(dependencies, output) {
     if (!dependencies) {
         return;
     }
+    const convertBackslashes = process.platform === 'win32';
     for (const dep of Object.keys(dependencies)) {
         const cmakePath = resolveFrom(process.cwd(), dep + "/CMakeLists.txt");
         if (cmakePath != null) {
             const name = convertPackageName(dep);
             const dir = path.basename(dep);
             const where = path.dirname(cmakePath);
-            const rel = path.relative(process.cwd(), where);
+            let rel = path.relative(process.cwd(), where);
+            if(convertBackslashes) {
+                rel = rel.replace(/\\/g, "/");
+            }
             output.push(dependencyBlock(name, dep, rel, dir));
         }
     }
