@@ -42,7 +42,7 @@ function convertPackageName(name) {
 function dependencyBlock(name, dep, rel, dir) {
     return `# ${dep} => ${name}
 if(NOT TARGET ${name})
-    add_subdirectory(${rel} ${dir})
+    add_subdirectory("${rel}" ${dir})
 endif()`
 }
 
