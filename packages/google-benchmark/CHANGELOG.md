@@ -1,5 +1,11 @@
 # @ekx/google-benchmark
 
+## 0.0.6
+
+### Patch Changes
+
+- d169a76: auto update
+
 ## 0.0.5
 
 ### Patch Changes

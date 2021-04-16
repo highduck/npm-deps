@@ -1,6 +1,6 @@
 {
   "name": "@ekx/miniaudio",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "scripts": {
     "recipe:build": "node recipe/package.js",
     "package:test": "node recipe/test-package.js"
@@ -15,7 +15,7 @@
     "ek.js"
   ],
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.9"
+    "@ekx/cli-utils": "0.0.10"
   },
   "dependencies": {}
 }

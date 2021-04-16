@@ -1,5 +1,11 @@
 # @ekx/miniaudio
 
+## 0.0.5
+
+### Patch Changes
+
+- d169a76: auto update
+
 ## 0.0.4
 
 ### Patch Changes
