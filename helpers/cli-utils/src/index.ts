@@ -83,13 +83,21 @@ export function downloadFiles(props: DownloadOptions) {
     return Promise.all(tasks);
 }
 
-export function untar(archivePath:string, dest:string, options?:{strip?:number}):Promise<number> {
+export async function untar(archivePath:string, dest:string, options?:{strip?:number}):Promise<number> {
     const args = [];
     if(options && options.strip != null) {
         args.push(`--strip-components=${options.strip}`);
     }
     makeDirs(dest);
-    return executeAsync("tar", ["-x", "-f", archivePath, ...args, "-C", dest]);
+    try {
+        const status = await executeAsync("tar", ["-x", "-f", archivePath, ...args, "-C", dest], {verbose: true, passExitCode: true});
+        if(status !== 0) {
+            console.error("untar exit code", status);
+        }
+    }
+    catch {
+        console.error("untar failed");
+    }
 }
 
 export async function downloadAndUnpackArtifact(url: string, destDir: string) {
