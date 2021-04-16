@@ -234,7 +234,7 @@ static int64_t SetupHwTimer()
     CpuId( regs, 0x80000007 );
     if( !( regs[3] & ( 1 << 8 ) ) )
     {
-        const char* noCheck = getenv( "TRACY_NO_INVARIANT_CHECK" );
+        const char* noCheck = GetEnvVar( "TRACY_NO_INVARIANT_CHECK" );
         if( !noCheck || noCheck[0] != '1' )
         {
 #if defined _WIN32 || defined __CYGWIN__
@@ -967,13 +967,11 @@ TRACY_API void InitRPMallocThread();
 void InitRPMallocThread()
 {
     RPMallocInit rpinit;
-    rpmalloc_thread_initialize();
 }
 
 struct ProfilerData
 {
     int64_t initTime = SetupHwTimer();
-    RPMallocInit rpmalloc_init;
     moodycamel::ConcurrentQueue<QueueItem> queue;
     Profiler profiler;
     std::atomic<uint32_t> lockCounter { 0 };
@@ -1003,7 +1001,9 @@ struct ProfilerThreadData
 ProfilerData* s_profilerData = nullptr;
 TRACY_API void StartupProfiler()
 {
-    s_profilerData = new ProfilerData;
+    RPMallocInit init;
+    s_profilerData = (ProfilerData*)tracy_malloc( sizeof( ProfilerData ) );
+    new (s_profilerData) ProfilerData();
     s_profilerData->profiler.SpawnWorkerThreads();
 }
 static ProfilerData& GetProfilerData()
@@ -1013,7 +1013,8 @@ static ProfilerData& GetProfilerData()
 }
 TRACY_API void ShutdownProfiler()
 {
-    delete s_profilerData;
+    s_profilerData->~ProfilerData();
+    tracy_free( s_profilerData );
     s_profilerData = nullptr;
     rpmalloc_finalize();
 }
@@ -1031,7 +1032,8 @@ static ProfilerData& GetProfilerData()
         ptr = profilerData.load( std::memory_order_acquire );
         if( !ptr )
         {
-            ptr = (ProfilerData*)malloc( sizeof( ProfilerData ) );
+            RPMallocInit init;
+            ptr = (ProfilerData*)tracy_malloc( sizeof( ProfilerData ) );
             new (ptr) ProfilerData();
             profilerData.store( ptr, std::memory_order_release );
         }
@@ -1041,11 +1043,61 @@ static ProfilerData& GetProfilerData()
 }
 #  endif
 
+// GCC prior to 8.4 had a bug with function-inline thread_local variables. Versions of glibc beginning with
+// 2.18 may attempt to work around this issue, which manifests as a crash while running static destructors
+// if this function is compiled into a shared object. Unfortunately, centos7 ships with glibc 2.17. If running
+// on old GCC, use the old-fashioned way as a workaround
+// See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85400
+#if defined(__GNUC__) && ((__GNUC__ < 8) || ((__GNUC__ == 8) && (__GNUC_MINOR__ < 4)))
+struct ProfilerThreadDataKey
+{
+public:
+    ProfilerThreadDataKey()
+    {
+        int val = pthread_key_create(&m_key, sDestructor);
+        static_cast<void>(val); // unused
+        assert(val == 0);
+    }
+    ~ProfilerThreadDataKey()
+    {
+        int val = pthread_key_delete(m_key);
+        static_cast<void>(val); // unused
+        assert(val == 0);
+    }
+    ProfilerThreadData& get()
+    {
+        void* p = pthread_getspecific(m_key);
+        if (!p)
+        {
+            RPMallocInit init;
+            p = (ProfilerThreadData*)tracy_malloc( sizeof( ProfilerThreadData ) );
+            new (p) ProfilerThreadData(GetProfilerData());
+            pthread_setspecific(m_key, p);
+        }
+        return *static_cast<ProfilerThreadData*>(p);
+    }
+private:
+    pthread_key_t m_key;
+
+    static void sDestructor(void* p)
+    {
+        ((ProfilerThreadData*)p)->~ProfilerThreadData();
+        tracy_free(p);
+    }
+};
+
+static ProfilerThreadData& GetProfilerThreadData()
+{
+    static ProfilerThreadDataKey key;
+    return key.get();
+}
+#else
 static ProfilerThreadData& GetProfilerThreadData()
 {
     thread_local ProfilerThreadData data( GetProfilerData() );
     return data;
 }
+#endif
 
 TRACY_API moodycamel::ConcurrentQueue<QueueItem>::ExplicitProducer* GetToken() { return GetProfilerThreadData().token.ptr; }
 TRACY_API Profiler& GetProfiler() { return GetProfilerData().profiler; }
@@ -1179,14 +1231,14 @@ Profiler::Profiler()
     ReportTopology();
 
 #ifndef TRACY_NO_EXIT
-    const char* noExitEnv = getenv( "TRACY_NO_EXIT" );
+    const char* noExitEnv = GetEnvVar( "TRACY_NO_EXIT" );
     if( noExitEnv && noExitEnv[0] == '1' )
     {
         m_noExit = true;
     }
 #endif
 
-    const char* userPort = getenv( "TRACY_PORT" );
+    const char* userPort = GetEnvVar( "TRACY_PORT" );
     if( userPort )
     {
         m_userPort = atoi( userPort );
