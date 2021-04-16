@@ -83,7 +83,7 @@ export function downloadFiles(props: DownloadOptions) {
     return Promise.all(tasks);
 }
 
-export async function untar(archivePath:string, dest:string, options?:{strip?:number}):Promise<number> {
+export async function untar(archivePath:string, dest:string, options?:{strip?:number}):Promise<void> {
     const args = [];
     if(options && options.strip != null) {
         args.push(`--strip-components=${options.strip}`);
@@ -95,8 +95,9 @@ export async function untar(archivePath:string, dest:string, options?:{strip?:nu
             console.error("untar exit code", status);
         }
     }
-    catch {
-        console.error("untar failed");
+    catch(e) {
+        console.error("untar failed", e);
+        throw e;
     }
 }
 
@@ -105,7 +106,7 @@ export async function downloadAndUnpackArtifact(url: string, destDir: string) {
     const archivePath = path.join(destDir, name);
     await downloadFile(url, archivePath);
     await untar(archivePath, "./" + destDir);
-    await fs.rmSync(archivePath);
+    fs.rmSync(archivePath);
 }
 
 export async function downloadCheck(url: string, destDir: string, sha1: string) {
