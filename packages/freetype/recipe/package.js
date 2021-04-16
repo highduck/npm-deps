@@ -3,8 +3,9 @@ const fs = require("fs");
 const rimraf = require("rimraf");
 
 async function run() {
-    //const artifact = "freetype-2.10.4.tar.gz";
-    await downloadAndUnpackArtifact("https://download.savannah.gnu.org/releases/freetype/freetype-2.10.4.tar.gz", "_dist");
+    const artifact = "freetype-2.10.4.tar.gz";
+    await downloadAndUnpackArtifact(`https://download.savannah.gnu.org/releases/freetype/${artifact}`,
+        "_dist", {strip: 1});
     copyFolderRecursiveSync("_dist/include", "include");
     copyFolderRecursiveSync("_dist/src", "src");
     fs.copyFileSync("recipe/ftoption.h", "include/freetype/config/ftoption.h");

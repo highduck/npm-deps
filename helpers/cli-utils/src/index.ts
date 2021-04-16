@@ -101,11 +101,11 @@ export async function untar(archivePath:string, dest:string, options?:{strip?:nu
     }
 }
 
-export async function downloadAndUnpackArtifact(url: string, destDir: string) {
+export async function downloadAndUnpackArtifact(url: string, destDir: string, options?:{strip?:number}) {
     const name = path.basename(url);
     const archivePath = path.join(destDir, name);
     await downloadFile(url, archivePath);
-    await untar(archivePath, "./" + destDir);
+    await untar(archivePath, "./" + destDir, options);
     fs.rmSync(archivePath);
 }
 
