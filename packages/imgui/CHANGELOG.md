@@ -1,5 +1,11 @@
 # @ekx/imgui
 
+## 0.0.13
+
+### Patch Changes
+
+- d169a76: auto update
+
 ## 0.0.12
 
 ### Patch Changes

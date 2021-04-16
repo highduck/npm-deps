@@ -1,5 +1,11 @@
 # @ekx/sokol
 
+## 0.0.7
+
+### Patch Changes
+
+- d169a76: auto update
+
 ## 0.0.6
 
 ### Patch Changes

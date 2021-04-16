@@ -1,5 +1,11 @@
 # @ekx/cli-utils
 
+## 0.0.10
+
+### Patch Changes
+
+- f165c7e: untar error handling
+
 ## 0.0.9
 
 ### Patch Changes

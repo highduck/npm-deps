@@ -1,5 +1,11 @@
 # @ekx/tracy
 
+## 0.0.9
+
+### Patch Changes
+
+- d169a76: auto update
+
 ## 0.0.8
 
 ### Patch Changes
