@@ -17,7 +17,7 @@
     "ci:complete-auto-update": "node auto-update.js"
   },
   "dependencies": {
-    "@changesets/cli": "^2.14.1",
+    "@changesets/cli": "^2.16.0",
     "glob": "^7.1.6",
     "wsrun": "^5.2.4"
   },

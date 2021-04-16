@@ -1,6 +1,6 @@
 /*
 Audio playback and capture library. Choice of public domain or MIT-0. See license statements at the end of this file.
-miniaudio - v0.10.33 - TBD
+miniaudio - v0.10.34 - TBD
 
 David Reid - mackron@gmail.com
 
@@ -1510,7 +1510,7 @@ extern "C" {
 
 #define MA_VERSION_MAJOR    0
 #define MA_VERSION_MINOR    10
-#define MA_VERSION_REVISION 33
+#define MA_VERSION_REVISION 34
 #define MA_VERSION_STRING   MA_XSTRINGIFY(MA_VERSION_MAJOR) "." MA_XSTRINGIFY(MA_VERSION_MINOR) "." MA_XSTRINGIFY(MA_VERSION_REVISION)
 
 #if defined(_MSC_VER) && !defined(__clang__)
@@ -3605,7 +3605,7 @@ typedef struct
             ma_device_type deviceType;
             void* pAudioClient;
             void** ppAudioClientService;
-            ma_result result;   /* The result from creating the audio client service. */
+            ma_result* pResult; /* The result from creating the audio client service. */
         } createAudioClient;
         struct
         {
@@ -12381,6 +12381,7 @@ static ma_result ma_context_enumerate_devices__null(ma_context* pContext, ma_enu
         ma_device_info deviceInfo;
         MA_ZERO_OBJECT(&deviceInfo);
         ma_strncpy_s(deviceInfo.name, sizeof(deviceInfo.name), "NULL Playback Device", (size_t)-1);
+        deviceInfo.isDefault = MA_TRUE; /* Only one playback and capture device for the null backend, so might as well mark as default. */
         cbResult = callback(pContext, ma_device_type_playback, &deviceInfo, pUserData);
     }
 
@@ -12389,6 +12390,7 @@ static ma_result ma_context_enumerate_devices__null(ma_context* pContext, ma_enu
         ma_device_info deviceInfo;
         MA_ZERO_OBJECT(&deviceInfo);
         ma_strncpy_s(deviceInfo.name, sizeof(deviceInfo.name), "NULL Capture Device", (size_t)-1);
+        deviceInfo.isDefault = MA_TRUE; /* Only one playback and capture device for the null backend, so might as well mark as default. */
         cbResult = callback(pContext, ma_device_type_capture, &deviceInfo, pUserData);
     }
 
@@ -12411,6 +12413,8 @@ static ma_result ma_context_get_device_info__null(ma_context* pContext, ma_devic
     } else {
         ma_strncpy_s(pDeviceInfo->name, sizeof(pDeviceInfo->name), "NULL Capture Device", (size_t)-1);
     }
+
+    pDeviceInfo->isDefault = MA_TRUE;   /* Only one playback and capture device for the null backend, so might as well mark as default. */
 
     /* Support everything on the null backend. */
     pDeviceInfo->nativeDataFormats[0].format     = ma_format_unknown;
@@ -13973,9 +13977,9 @@ static ma_thread_result MA_THREADCALL ma_context_command_thread__wasapi(void* pU
             case MA_CONTEXT_COMMAND_CREATE_IAUDIOCLIENT__WASAPI:
             {
                 if (cmd.data.createAudioClient.deviceType == ma_device_type_playback) {
-                    result = ma_result_from_HRESULT(ma_IAudioClient_GetService((ma_IAudioClient*)cmd.data.createAudioClient.pAudioClient, &MA_IID_IAudioRenderClient, cmd.data.createAudioClient.ppAudioClientService));
+                    *cmd.data.createAudioClient.pResult = ma_result_from_HRESULT(ma_IAudioClient_GetService((ma_IAudioClient*)cmd.data.createAudioClient.pAudioClient, &MA_IID_IAudioRenderClient, cmd.data.createAudioClient.ppAudioClientService));
                 } else {
-                    result = ma_result_from_HRESULT(ma_IAudioClient_GetService((ma_IAudioClient*)cmd.data.createAudioClient.pAudioClient, &MA_IID_IAudioCaptureClient, cmd.data.createAudioClient.ppAudioClientService));
+                    *cmd.data.createAudioClient.pResult = ma_result_from_HRESULT(ma_IAudioClient_GetService((ma_IAudioClient*)cmd.data.createAudioClient.pAudioClient, &MA_IID_IAudioCaptureClient, cmd.data.createAudioClient.ppAudioClientService));
                 }
             } break;
 
@@ -14018,18 +14022,19 @@ static ma_thread_result MA_THREADCALL ma_context_command_thread__wasapi(void* pU
 static ma_result ma_device_create_IAudioClient_service__wasapi(ma_context* pContext, ma_device_type deviceType, ma_IAudioClient* pAudioClient, void** ppAudioClientService)
 {
     ma_result result;
+    ma_result cmdResult;
     ma_context_command__wasapi cmd = ma_context_init_command__wasapi(MA_CONTEXT_COMMAND_CREATE_IAUDIOCLIENT__WASAPI);
     cmd.data.createAudioClient.deviceType           = deviceType;
     cmd.data.createAudioClient.pAudioClient         = (void*)pAudioClient;
     cmd.data.createAudioClient.ppAudioClientService = ppAudioClientService;
-    cmd.data.createAudioClient.result               = MA_SUCCESS;
+    cmd.data.createAudioClient.pResult              = &cmdResult;   /* Declared locally, but won't be dereferenced after this function returns since execution of the command will wait here. */
     
     result = ma_context_post_command__wasapi(pContext, &cmd);  /* This will not return until the command has actually been run. */
     if (result != MA_SUCCESS) {
         return result;
     }
 
-    return cmd.data.createAudioClient.result;
+    return *cmd.data.createAudioClient.pResult;
 }
 
 #if 0   /* Not used at the moment, but leaving here for future use. */
@@ -44832,7 +44837,7 @@ extern "C" {
 #define DRFLAC_XSTRINGIFY(x)     DRFLAC_STRINGIFY(x)
 #define DRFLAC_VERSION_MAJOR     0
 #define DRFLAC_VERSION_MINOR     12
-#define DRFLAC_VERSION_REVISION  28
+#define DRFLAC_VERSION_REVISION  29
 #define DRFLAC_VERSION_STRING    DRFLAC_XSTRINGIFY(DRFLAC_VERSION_MAJOR) "." DRFLAC_XSTRINGIFY(DRFLAC_VERSION_MINOR) "." DRFLAC_XSTRINGIFY(DRFLAC_VERSION_REVISION)
 #include <stddef.h>
 typedef   signed char           drflac_int8;
@@ -53006,6 +53011,27 @@ static DRFLAC_INLINE drflac_bool32 drflac_has_sse41(void)
     #if ((__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))
         #define DRFLAC_HAS_BYTESWAP16_INTRINSIC
     #endif
+#elif defined(__WATCOMC__) && defined(__386__)
+    #define DRFLAC_HAS_BYTESWAP16_INTRINSIC
+    #define DRFLAC_HAS_BYTESWAP32_INTRINSIC
+    #define DRFLAC_HAS_BYTESWAP64_INTRINSIC
+    extern __inline drflac_uint16 _watcom_bswap16(drflac_uint16);
+    extern __inline drflac_uint32 _watcom_bswap32(drflac_uint32);
+    extern __inline drflac_uint64 _watcom_bswap64(drflac_uint64);
+#pragma aux _watcom_bswap16 = \
+    "xchg al, ah" \
+    parm   [ax]   \
+    modify [ax];
+#pragma aux _watcom_bswap32 = \
+    "bswap eax"  \
+    parm   [eax] \
+    modify [eax];
+#pragma aux _watcom_bswap64 = \
+    "bswap eax"     \
+    "bswap edx"     \
+    "xchg eax,edx"  \
+    parm [eax edx]  \
+    modify [eax edx];
 #endif
 #ifndef DRFLAC_ASSERT
 #include <assert.h>
@@ -53187,6 +53213,8 @@ static DRFLAC_INLINE drflac_uint16 drflac__swap_endian_uint16(drflac_uint16 n)
         return _byteswap_ushort(n);
     #elif defined(__GNUC__) || defined(__clang__)
         return __builtin_bswap16(n);
+    #elif defined(__WATCOMC__) && defined(__386__)
+        return _watcom_bswap16(n);
     #else
         #error "This compiler does not support the byte swap intrinsic."
     #endif
@@ -53214,6 +53242,8 @@ static DRFLAC_INLINE drflac_uint32 drflac__swap_endian_uint32(drflac_uint32 n)
         #else
             return __builtin_bswap32(n);
         #endif
+    #elif defined(__WATCOMC__) && defined(__386__)
+        return _watcom_bswap32(n);
     #else
         #error "This compiler does not support the byte swap intrinsic."
     #endif
@@ -53231,6 +53261,8 @@ static DRFLAC_INLINE drflac_uint64 drflac__swap_endian_uint64(drflac_uint64 n)
         return _byteswap_uint64(n);
     #elif defined(__GNUC__) || defined(__clang__)
         return __builtin_bswap64(n);
+    #elif defined(__WATCOMC__) && defined(__386__)
+        return _watcom_bswap64(n);
     #else
         #error "This compiler does not support the byte swap intrinsic."
     #endif
@@ -53848,6 +53880,9 @@ static drflac_bool32 drflac__find_and_seek_to_next_sync_code(drflac_bs* bs)
 #if  defined(_MSC_VER) && _MSC_VER >= 1400 && (defined(DRFLAC_X64) || defined(DRFLAC_X86)) && !defined(__clang__)
 #define DRFLAC_IMPLEMENT_CLZ_MSVC
 #endif
+#if  defined(__WATCOMC__) && defined(__386__)
+#define DRFLAC_IMPLEMENT_CLZ_WATCOM
+#endif
 static DRFLAC_INLINE drflac_uint32 drflac__clz_software(drflac_cache_t x)
 {
     drflac_uint32 n;
@@ -53960,6 +53995,15 @@ static DRFLAC_INLINE drflac_uint32 drflac__clz_msvc(drflac_cache_t x)
     return sizeof(x)*8 - n - 1;
 }
 #endif
+#ifdef DRFLAC_IMPLEMENT_CLZ_WATCOM
+static __inline drflac_uint32 drflac__clz_watcom (drflac_uint32);
+#pragma aux drflac__clz_watcom = \
+    "bsr eax, eax" \
+    "xor eax, 31" \
+    parm [eax] nomemory \
+    value [eax] \
+    modify exact [eax] nomemory;
+#endif
 static DRFLAC_INLINE drflac_uint32 drflac__clz(drflac_cache_t x)
 {
 #ifdef DRFLAC_IMPLEMENT_CLZ_LZCNT
@@ -53970,6 +54014,8 @@ static DRFLAC_INLINE drflac_uint32 drflac__clz(drflac_cache_t x)
     {
 #ifdef DRFLAC_IMPLEMENT_CLZ_MSVC
         return drflac__clz_msvc(x);
+#elif defined(DRFLAC_IMPLEMENT_CLZ_WATCOM)
+        return (x == 0) ? sizeof(x)*8 : drflac__clz_watcom(x);
 #else
         return drflac__clz_software(x);
 #endif
@@ -54286,7 +54332,6 @@ static drflac_bool32 drflac__decode_samples_with_residual__rice__reference(drfla
 {
     drflac_uint32 i;
     DRFLAC_ASSERT(bs != NULL);
-    DRFLAC_ASSERT(count > 0);
     DRFLAC_ASSERT(pSamplesOut != NULL);
     for (i = 0; i < count; ++i) {
         drflac_uint32 zeroCounter = 0;
@@ -54555,7 +54600,6 @@ static drflac_bool32 drflac__decode_samples_with_residual__rice__scalar_zeroorde
     drflac_uint32 riceParamMask;
     drflac_uint32 i;
     DRFLAC_ASSERT(bs != NULL);
-    DRFLAC_ASSERT(count > 0);
     DRFLAC_ASSERT(pSamplesOut != NULL);
     (void)bitsPerSample;
     (void)order;
@@ -54590,7 +54634,6 @@ static drflac_bool32 drflac__decode_samples_with_residual__rice__scalar(drflac_b
     const drflac_int32* pSamplesOutEnd;
     drflac_uint32 i;
     DRFLAC_ASSERT(bs != NULL);
-    DRFLAC_ASSERT(count > 0);
     DRFLAC_ASSERT(pSamplesOut != NULL);
     if (order == 0) {
         return drflac__decode_samples_with_residual__rice__scalar_zeroorder(bs, bitsPerSample, count, riceParam, order, shift, coefficients, pSamplesOut);
@@ -55009,7 +55052,6 @@ static drflac_bool32 drflac__decode_samples_with_residual__rice__sse41_64(drflac
 static drflac_bool32 drflac__decode_samples_with_residual__rice__sse41(drflac_bs* bs, drflac_uint32 bitsPerSample, drflac_uint32 count, drflac_uint8 riceParam, drflac_uint32 order, drflac_int32 shift, const drflac_int32* coefficients, drflac_int32* pSamplesOut)
 {
     DRFLAC_ASSERT(bs != NULL);
-    DRFLAC_ASSERT(count > 0);
     DRFLAC_ASSERT(pSamplesOut != NULL);
     if (order > 0 && order <= 12) {
         if (bitsPerSample+shift > 32) {
@@ -55360,7 +55402,6 @@ static drflac_bool32 drflac__decode_samples_with_residual__rice__neon_64(drflac_
 static drflac_bool32 drflac__decode_samples_with_residual__rice__neon(drflac_bs* bs, drflac_uint32 bitsPerSample, drflac_uint32 count, drflac_uint8 riceParam, drflac_uint32 order, drflac_int32 shift, const drflac_int32* coefficients, drflac_int32* pSamplesOut)
 {
     DRFLAC_ASSERT(bs != NULL);
-    DRFLAC_ASSERT(count > 0);
     DRFLAC_ASSERT(pSamplesOut != NULL);
     if (order > 0 && order <= 12) {
         if (bitsPerSample+shift > 32) {
@@ -55396,7 +55437,6 @@ static drflac_bool32 drflac__read_and_seek_residual__rice(drflac_bs* bs, drflac_
 {
     drflac_uint32 i;
     DRFLAC_ASSERT(bs != NULL);
-    DRFLAC_ASSERT(count > 0);
     for (i = 0; i < count; ++i) {
         if (!drflac__seek_rice_parts(bs, riceParam)) {
             return DRFLAC_FALSE;
@@ -55408,7 +55448,6 @@ static drflac_bool32 drflac__decode_samples_with_residual__unencoded(drflac_bs* 
 {
     drflac_uint32 i;
     DRFLAC_ASSERT(bs != NULL);
-    DRFLAC_ASSERT(count > 0);
     DRFLAC_ASSERT(unencodedBitsPerSample <= 31);
     DRFLAC_ASSERT(pSamplesOut != NULL);
     for (i = 0; i < count; ++i) {
@@ -55449,7 +55488,7 @@ static drflac_bool32 drflac__decode_samples_with_residual(drflac_bs* bs, drflac_
     if (partitionOrder > 8) {
         return DRFLAC_FALSE;
     }
-    if ((blockSize / (1 << partitionOrder)) <= order) {
+    if ((blockSize / (1 << partitionOrder)) < order) {
         return DRFLAC_FALSE;
     }
     samplesInPartition = (blockSize / (1 << partitionOrder)) - order;
@@ -60594,6 +60633,7 @@ DRFLAC_API drflac_bool32 drflac_seek_to_pcm_frame(drflac* pFlac, drflac_uint64 p
         return drflac__seek_to_first_frame(pFlac);
     } else {
         drflac_bool32 wasSuccessful = DRFLAC_FALSE;
+        drflac_uint64 originalPCMFrame = pFlac->currentPCMFrame;
         if (pcmFrameIndex > pFlac->totalPCMFrameCount) {
             pcmFrameIndex = pFlac->totalPCMFrameCount;
         }
@@ -60634,7 +60674,13 @@ DRFLAC_API drflac_bool32 drflac_seek_to_pcm_frame(drflac* pFlac, drflac_uint64 p
                 wasSuccessful = drflac__seek_to_pcm_frame__brute_force(pFlac, pcmFrameIndex);
             }
         }
-        pFlac->currentPCMFrame = pcmFrameIndex;
+        if (wasSuccessful) {
+            pFlac->currentPCMFrame = pcmFrameIndex;
+        } else {
+            if (drflac_seek_to_pcm_frame(pFlac, originalPCMFrame) == DRFLAC_FALSE) {
+                drflac_seek_to_pcm_frame(pFlac, 0);
+            }
+        }
         return wasSuccessful;
     }
 }
@@ -64530,7 +64576,11 @@ The following miscellaneous changes have also been made.
 /*
 REVISION HISTORY
 ================
-v0.10.33 - TBD
+v0.10.34 - TBD
+  - WASAPI: Fix a bug where a result code is not getting checked at initialization time.
+  - Mark devices as default on the null backend.
+
+v0.10.33 - 2021-04-04
   - Core Audio: Fix a memory leak.
   - Core Audio: Fix a bug where the performance profile is not being used by playback devices.
   - JACK: Fix loading of 64-bit JACK on Windows.
@@ -64538,6 +64588,7 @@ v0.10.33 - TBD
     - ma_calculate_buffer_size_in_milliseconds_from_frames()
     - ma_calculate_buffer_size_in_frames_from_milliseconds()
   - Fix compilation errors relating to c89atomic.
+  - Update FLAC decoder.
 
 v0.10.32 - 2021-02-23
   - WASAPI: Fix a deadlock in exclusive mode.
