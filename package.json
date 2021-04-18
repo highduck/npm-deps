@@ -23,9 +23,7 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*",
-      "helpers/*",
-      "test-cmake-config"
+      "packages/*"
     ]
   }
 }

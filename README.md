@@ -16,8 +16,6 @@ C++ modules via NPM packages
 
 ### TODO
 
-- replace `lzma-native` to make initial install faster
 - cleanup task for packages
 - test only packages changed since previous release, or unreleased
 - rename repo
-- upgrade flow (run recipe, check changes, run package test, push version change)
