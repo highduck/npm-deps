@@ -18,8 +18,8 @@
     "@ekx/cli-utils": "0.0.10"
   },
   "dependencies": {
-    "npm-cmake": "0.1.0",
     "@ekx/freetype": "0.0.7",
-    "@ekx/stb": "0.0.3"
+    "@ekx/stb": "0.0.3",
+    "npm-cmake": "^0.1.0"
   }
 }
