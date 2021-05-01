@@ -1,5 +1,11 @@
 # @ekx/dev-fonts
 
+## 0.0.7
+
+### Patch Changes
+
+- d34566b: add Google Material Icons font
+
 ## 0.0.6
 
 ### Patch Changes
