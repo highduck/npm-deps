@@ -21,10 +21,18 @@ async function run() {
             ]
         }),
         downloadFiles({
+            srcBaseUrl: `https://github.com/google/material-design-icons/raw/master/font`,
+            destPath: "ttf",
+            fileList: [
+                "MaterialIcons-Regular.ttf"
+            ]
+        }),
+        downloadFiles({
             srcBaseUrl: `https://github.com/juliettef/IconFontCppHeaders/raw/main`,
             destPath: "src",
             fileList: [
-                "IconsFontAwesome5.h"
+                "IconsFontAwesome5.h",
+                "IconsMaterialDesign.h"
             ]
         })
     ];
