@@ -1,6 +1,14 @@
 # @ekx/npm-deps-test
 
+## 0.0.2
+
+### Patch Changes
+
+- Updated dependencies [d34566b]
+  - @ekx/dev-fonts@0.0.7
+
 ## 0.0.1
+
 ### Patch Changes
 
 - Updated dependencies [d169a76]
