@@ -1,5 +1,11 @@
 # @ekx/miniaudio
 
+## 0.0.6
+
+### Patch Changes
+
+- 90f6420: auto update
+
 ## 0.0.5
 
 ### Patch Changes

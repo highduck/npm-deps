@@ -1,5 +1,18 @@
 # @ekx/npm-deps-test
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [90f6420]
+  - @ekx/google-benchmark@0.0.7
+  - @ekx/google-test@0.0.7
+  - @ekx/imgui@0.0.14
+  - @ekx/miniaudio@0.0.6
+  - @ekx/pugixml@0.0.4
+  - @ekx/sokol@0.0.8
+  - @ekx/tracy@0.0.10
+
 ## 0.0.2
 
 ### Patch Changes

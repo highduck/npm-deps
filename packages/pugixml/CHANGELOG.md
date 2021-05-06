@@ -1,5 +1,11 @@
 # @ekx/pugixml
 
+## 0.0.4
+
+### Patch Changes
+
+- 90f6420: auto update
+
 ## 0.0.3
 
 ### Patch Changes
