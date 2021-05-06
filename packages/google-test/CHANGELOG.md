@@ -1,5 +1,11 @@
 # @ekx/google-test
 
+## 0.0.7
+
+### Patch Changes
+
+- 90f6420: auto update
+
 ## 0.0.6
 
 ### Patch Changes
