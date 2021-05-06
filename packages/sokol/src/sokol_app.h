@@ -1489,6 +1489,8 @@ SOKOL_APP_API_DECL const void* sapp_ios_get_window(void);
 SOKOL_APP_API_DECL const void* sapp_d3d11_get_device(void);
 /* D3D11: get pointer to ID3D11DeviceContext object */
 SOKOL_APP_API_DECL const void* sapp_d3d11_get_device_context(void);
+/* D3D11: get pointer to IDXGISwapChain object */
+SOKOL_APP_API_DECL const void* sapp_d3d11_get_swap_chain(void);
 /* D3D11: get pointer to ID3D11RenderTargetView object */
 SOKOL_APP_API_DECL const void* sapp_d3d11_get_render_target_view(void);
 /* D3D11: get pointer to ID3D11DepthStencilView */
@@ -2822,10 +2824,8 @@ _SOKOL_PRIVATE void _sapp_macos_run(const sapp_desc* desc) {
     // set the application dock icon as early as possible, otherwise
     // the dummy icon will be visible for a short time
     sapp_set_icon(&_sapp.desc.icon);
-    NSApp.activationPolicy = NSApplicationActivationPolicyRegular;
     _sapp.macos.app_dlg = [[_sapp_macos_app_delegate alloc] init];
     NSApp.delegate = _sapp.macos.app_dlg;
-    [NSApp activateIgnoringOtherApps:YES];
     [NSApp run];
     // NOTE: [NSApp run] never returns, instead cleanup code
     // must be put into applicationWillTerminate
@@ -3168,6 +3168,8 @@ _SOKOL_PRIVATE void _sapp_macos_frame(void) {
     else {
         [_sapp.macos.window center];
     }
+    NSApp.activationPolicy = NSApplicationActivationPolicyRegular;
+    [NSApp activateIgnoringOtherApps:YES];
     [_sapp.macos.window makeKeyAndOrderFront:nil];
     _sapp_macos_update_dimensions();
     [NSEvent setMouseCoalescingEnabled:NO];
@@ -3366,7 +3368,9 @@ _SOKOL_PRIVATE void _sapp_macos_poll_input_events() {
     _SOKOL_UNUSED(rect);
     /* Catch any last-moment input events */
     _sapp_macos_poll_input_events();
-    _sapp_macos_frame();
+    @autoreleasepool {
+        _sapp_macos_frame();
+    }
     #if !defined(SOKOL_METAL)
     [[_sapp.macos.view openGLContext] flushBuffer];
     #endif
@@ -3883,7 +3887,9 @@ _SOKOL_PRIVATE void _sapp_ios_show_keyboard(bool shown) {
 @implementation _sapp_ios_view
 - (void)drawRect:(CGRect)rect {
     _SOKOL_UNUSED(rect);
-    _sapp_ios_frame();
+    @autoreleasepool {
+        _sapp_ios_frame();
+    }
 }
 - (BOOL)isOpaque {
     return YES;
@@ -10651,11 +10657,11 @@ SOKOL_API_IMPL bool sapp_keyboard_shown(void) {
     return _sapp.onscreen_keyboard_shown;
 }
 
-SOKOL_APP_API_DECL bool sapp_is_fullscreen(void) {
+SOKOL_API_IMPL bool sapp_is_fullscreen(void) {
     return _sapp.fullscreen;
 }
 
-SOKOL_APP_API_DECL void sapp_toggle_fullscreen(void) {
+SOKOL_API_IMPL void sapp_toggle_fullscreen(void) {
     #if defined(_SAPP_MACOS)
     _sapp_macos_toggle_fullscreen();
     #elif defined(_SAPP_WIN32)
@@ -10947,6 +10953,15 @@ SOKOL_API_IMPL const void* sapp_d3d11_get_device_context(void) {
     #else
         return 0;
     #endif
+}
+
+SOKOL_API_IMPL const void* sapp_d3d11_get_swap_chain(void) {
+    SOKOL_ASSERT(_sapp.valid);
+#if defined(SOKOL_D3D11)
+    return _sapp.d3d11.swap_chain;
+#else
+    return 0;
+#endif
 }
 
 SOKOL_API_IMPL const void* sapp_d3d11_get_render_target_view(void) {

@@ -294,6 +294,9 @@ size_t RunSpecifiedBenchmarks(BenchmarkReporter* display_reporter,
 // allocation measurements for benchmark runs.
 void RegisterMemoryManager(MemoryManager* memory_manager);
 
+// Add a key-value pair to output as part of the context stanza in the report.
+void AddCustomContext(const std::string& key, const std::string& value);
+
 namespace internal {
 class Benchmark;
 class BenchmarkImp;
@@ -448,6 +451,7 @@ struct Statistics {
 struct BenchmarkInstance;
 class ThreadTimer;
 class ThreadManager;
+class PerfCountersMeasurement;
 
 enum AggregationReportMode
 #if defined(BENCHMARK_HAS_CXX11)
@@ -687,15 +691,17 @@ class State {
  private:
   State(IterationCount max_iters, const std::vector<int64_t>& ranges,
         int thread_i, int n_threads, internal::ThreadTimer* timer,
-        internal::ThreadManager* manager);
+        internal::ThreadManager* manager,
+        internal::PerfCountersMeasurement* perf_counters_measurement);
 
   void StartKeepRunning();
   // Implementation of KeepRunning() and KeepRunningBatch().
   // is_batch must be true unless n is 1.
   bool KeepRunningInternal(IterationCount n, bool is_batch);
   void FinishKeepRunning();
-  internal::ThreadTimer* timer_;
-  internal::ThreadManager* manager_;
+  internal::ThreadTimer* const timer_;
+  internal::ThreadManager* const manager_;
+  internal::PerfCountersMeasurement* const perf_counters_measurement_;
 
   friend struct internal::BenchmarkInstance;
 };
@@ -1301,6 +1307,7 @@ class Fixture : public internal::Benchmark {
     ::benchmark::Initialize(&argc, argv);                               \
     if (::benchmark::ReportUnrecognizedArguments(argc, argv)) return 1; \
     ::benchmark::RunSpecifiedBenchmarks();                              \
+    return 0;                                                           \
   }                                                                     \
   int main(int, char**)
 
@@ -1324,9 +1331,9 @@ struct CPUInfo {
   };
 
   int num_cpus;
+  Scaling scaling;
   double cycles_per_second;
   std::vector<CacheInfo> caches;
-  Scaling scaling;
   std::vector<double> load_avg;
 
   static const CPUInfo& Get();
