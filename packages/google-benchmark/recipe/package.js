@@ -44,6 +44,8 @@ downloadFiles({
         "src/thread_timer.h",
         "src/timers.cc",
         "src/timers.h",
+        "src/perf_counters.h",
+        "src/perf_counters.cc",
     ]
 }).then(() => {
     console.info("Packaging done: google benchmark");

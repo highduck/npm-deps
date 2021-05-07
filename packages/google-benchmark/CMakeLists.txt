@@ -20,6 +20,7 @@ add_library(${PROJECT_NAME} STATIC
         src/complexity.cc
         src/colorprint.cc
         src/string_util.cc
+        src/perf_counters.cc
         )
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 target_include_directories(${PROJECT_NAME} PUBLIC ./include)
