@@ -1,5 +1,12 @@
 # @ekx/npm-deps-test
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [a71bc24]
+  - @ekx/google-benchmark@0.0.8
+
 ## 0.0.3
 
 ### Patch Changes
