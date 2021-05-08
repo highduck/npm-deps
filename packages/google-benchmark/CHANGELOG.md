@@ -1,5 +1,11 @@
 # @ekx/google-benchmark
 
+## 0.0.8
+
+### Patch Changes
+
+- a71bc24: fix compile perf_counters.cc
+
 ## 0.0.7
 
 ### Patch Changes
