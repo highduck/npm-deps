@@ -14,7 +14,7 @@
     "src"
   ],
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.10",
+    "@ekx/cli-utils": "0.0.11",
     "rimraf": "^3.0.2"
   },
   "dependencies": {}
