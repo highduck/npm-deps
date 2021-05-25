@@ -1001,6 +1001,9 @@ _SOKOL_PRIVATE const char* _sg_imgui_pixelformat_string(sg_pixel_format fmt) {
         case SG_PIXELFORMAT_PVRTC_RGBA_4BPP: return "SG_PIXELFORMAT_PVRTC_RGBA_4BPP";
         case SG_PIXELFORMAT_ETC2_RGB8: return "SG_PIXELFORMAT_ETC2_RGB8";
         case SG_PIXELFORMAT_ETC2_RGB8A1: return "SG_PIXELFORMAT_ETC2_RGB8A1";
+        case SG_PIXELFORMAT_ETC2_RGBA8: return "SG_PIXELFORMAT_ETC2_RGBA8";
+        case SG_PIXELFORMAT_ETC2_RG11: return "SG_PIXELFORMAT_ETC2_RG11";
+        case SG_PIXELFORMAT_ETC2_RG11SN: return "SG_PIXELFORMAT_ETC2_RG11SN";
         default: return "???";
     }
 }
@@ -3732,6 +3735,7 @@ _SOKOL_PRIVATE void _sg_imgui_draw_caps_panel(void) {
     igText("    max_image_size_array: %d", l.max_image_size_array);
     igText("    max_image_array_layers: %d", l.max_image_array_layers);
     igText("    max_vertex_attrs: %d", l.max_vertex_attrs);
+    igText("    gl_max_vertex_uniform_vectors: %d", l.gl_max_vertex_uniform_vectors);
     igText("\nUsable Pixelformats:");
     for (int i = (int)(SG_PIXELFORMAT_NONE+1); i < (int)_SG_PIXELFORMAT_NUM; i++) {
         sg_pixel_format fmt = (sg_pixel_format)i;
