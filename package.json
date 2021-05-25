@@ -10,8 +10,8 @@
     "postinstall": "wsrun -m postinstall",
     "ci:build": "wsrun -m -e -t build",
     "ci:test": "wsrun -m -e -t test",
-    "ci:build-recipes": "wsrun -m -e -t recipe:build",
-    "ci:test-packages": "wsrun -m -e -t package:test",
+    "ci:build-recipes": "wsrun -m -e -t --report recipe:build",
+    "ci:test-packages": "wsrun -m -e -t --report package:test",
     "repo:clean": "git clean -fdx",
     "check-install": "git clean -fdx && yarn --frozen-lockfile",
     "ci:complete-auto-update": "node auto-update.js"

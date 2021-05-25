@@ -3,4 +3,4 @@ const {testPackage} = require('@ekx/cli-utils');
 testPackage({
     buildType: ['Release'],
     expectExitCode: null
-}).then();
+}).catch(() => process.exit(1));
