@@ -1,5 +1,12 @@
 # @ekx/google-benchmark
 
+## 0.0.9
+
+### Patch Changes
+
+- 6390a7c: Fix package recipe
+- 3e75fb6: auto update
+
 ## 0.0.8
 
 ### Patch Changes
