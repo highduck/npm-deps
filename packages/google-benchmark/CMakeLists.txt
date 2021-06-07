@@ -6,7 +6,7 @@ add_library(${PROJECT_NAME} STATIC
         src/commandlineflags.cc
         src/benchmark_name.cc
         src/benchmark_api_internal.cc
-        src/benchmark_adjust_repetitions.cc
+#        src/benchmark_adjust_repetitions.cc
         src/benchmark_register.cc
         src/benchmark_runner.cc
         src/reporter.cc

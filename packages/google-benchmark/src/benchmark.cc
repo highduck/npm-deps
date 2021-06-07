@@ -56,18 +56,6 @@
 #include "thread_manager.h"
 #include "thread_timer.h"
 
-// Each benchmark can be repeated a number of times, and within each
-// *repetition*, we run the user-defined benchmark function a number of
-// *iterations*. The number of repetitions is determined based on flags
-// (--benchmark_repetitions).
-namespace {
-
-// Attempt to make each repetition run for at least this much of time.
-constexpr double kDefaultMinTimeTotalSecs = 0.5;
-constexpr int kRandomInterleavingDefaultRepetitions = 12;
-
-}  // namespace
-
 // Print a list of benchmarks. This option overrides all other options.
 DEFINE_bool(benchmark_list_tests, false);
 
@@ -76,38 +64,19 @@ DEFINE_bool(benchmark_list_tests, false);
 // linked into the binary are run.
 DEFINE_string(benchmark_filter, ".");
 
-// Do NOT read these flags directly. Use Get*() to read them.
-namespace do_not_read_flag_directly {
-
-// Minimum number of seconds we should run benchmark per repetition before
-// results are considered significant. For cpu-time based tests, this is the
-// lower bound on the total cpu time used by all threads that make up the test.
-// For real-time based tests, this is the lower bound on the elapsed time of the
-// benchmark execution, regardless of number of threads. If left unset, will use
-// kDefaultMinTimeTotalSecs / FLAGS_benchmark_repetitions, if random
-// interleaving is enabled. Otherwise, will use kDefaultMinTimeTotalSecs.
-// Do NOT read this flag directly. Use GetMinTime() to read this flag.
-DEFINE_double(benchmark_min_time, -1.0);
+// Minimum number of seconds we should run benchmark before results are
+// considered significant.  For cpu-time based tests, this is the lower bound
+// on the total cpu time used by all threads that make up the test.  For
+// real-time based tests, this is the lower bound on the elapsed time of the
+// benchmark execution, regardless of number of threads.
+DEFINE_double(benchmark_min_time, 0.5);
 
 // The number of runs of each benchmark. If greater than 1, the mean and
-// standard deviation of the runs will be reported. By default, the number of
-// repetitions is 1 if random interleaving is disabled, and up to
-// kDefaultRepetitions if random interleaving is enabled. (Read the
-// documentation for random interleaving to see why it might be less than
-// kDefaultRepetitions.)
-// Do NOT read this flag directly, Use GetRepetitions() to access this flag.
-DEFINE_int32(benchmark_repetitions, -1);
+// standard deviation of the runs will be reported.
+DEFINE_int32(benchmark_repetitions, 1);
 
-}  // namespace do_not_read_flag_directly
-
-// The maximum overhead allowed for random interleaving. A value X means total
-// execution time under random interleaving is limited by
-// (1 + X) * original total execution time. Set to 'inf' to allow infinite
-// overhead.
-DEFINE_double(benchmark_random_interleaving_max_overhead, 0.4);
-
-// If set, enable random interleaving. See
-// http://github.com/google/benchmark/issues/1051 for details.
+// If set, enable random interleaving of repetitions of all benchmarks.
+// See http://github.com/google/benchmark/issues/1051 for details.
 DEFINE_bool(benchmark_enable_random_interleaving, false);
 
 // Report the result of each benchmark repetitions. When 'true' is specified
@@ -158,30 +127,6 @@ namespace internal {
 DEFINE_kvpairs(benchmark_context, {});
 
 std::map<std::string, std::string>* global_context = nullptr;
-
-// Performance measurements always come with random variances. Defines a
-// factor by which the required number of iterations is overestimated in order
-// to reduce the probability that the minimum time requirement will not be met.
-const double kSafetyMultiplier = 1.4;
-
-// Wraps --benchmark_min_time and returns valid default values if not supplied.
-double GetMinTime() {
-  const double default_min_time = kDefaultMinTimeTotalSecs / GetRepetitions();
-  const double flag_min_time =
-      do_not_read_flag_directly::FLAGS_benchmark_min_time;
-  return flag_min_time >= 0.0 ? flag_min_time : default_min_time;
-}
-
-// Wraps --benchmark_repetitions and return valid default value if not supplied.
-int GetRepetitions() {
-  const int default_repetitions =
-      FLAGS_benchmark_enable_random_interleaving
-          ? kRandomInterleavingDefaultRepetitions
-          : 1;
-  const int flag_repetitions =
-      do_not_read_flag_directly::FLAGS_benchmark_repetitions;
-  return flag_repetitions >= 0 ? flag_repetitions : default_repetitions;
-}
 
 // FIXME: wouldn't LTO mess this up?
 void UseCharPointer(char const volatile*) {}
@@ -313,14 +258,12 @@ void FlushStreams(BenchmarkReporter* reporter) {
 // Reports in both display and file reporters.
 void Report(BenchmarkReporter* display_reporter,
             BenchmarkReporter* file_reporter, const RunResults& run_results) {
-  auto report_one = [](BenchmarkReporter* reporter,
-                       bool aggregates_only,
+  auto report_one = [](BenchmarkReporter* reporter, bool aggregates_only,
                        const RunResults& results) {
     assert(reporter);
     // If there are no aggregates, do output non-aggregates.
     aggregates_only &= !results.aggregates_only.empty();
-    if (!aggregates_only)
-      reporter->ReportRuns(results.non_aggregates);
+    if (!aggregates_only) reporter->ReportRuns(results.non_aggregates);
     if (!results.aggregates_only.empty())
       reporter->ReportRuns(results.aggregates_only);
   };
@@ -342,7 +285,7 @@ void RunBenchmarks(const std::vector<BenchmarkInstance>& benchmarks,
   CHECK(display_reporter != nullptr);
 
   // Determine the width of the name field using a minimum width of 10.
-  bool might_have_aggregates = GetRepetitions() > 1;
+  bool might_have_aggregates = FLAGS_benchmark_repetitions > 1;
   size_t name_field_width = 10;
   size_t stat_field_width = 0;
   for (const BenchmarkInstance& benchmark : benchmarks) {
@@ -350,9 +293,8 @@ void RunBenchmarks(const std::vector<BenchmarkInstance>& benchmarks,
         std::max<size_t>(name_field_width, benchmark.name().str().size());
     might_have_aggregates |= benchmark.repetitions() > 1;
 
-    for (const auto& Stat : benchmark.statistics()) {
+    for (const auto& Stat : benchmark.statistics())
       stat_field_width = std::max<size_t>(stat_field_width, Stat.name_.size());
-    }
   }
   if (might_have_aggregates) name_field_width += 1 + stat_field_width;
 
@@ -360,58 +302,71 @@ void RunBenchmarks(const std::vector<BenchmarkInstance>& benchmarks,
   BenchmarkReporter::Context context;
   context.name_field_width = name_field_width;
 
-  // Keep track of running times of all instances of current benchmark
-  std::vector<BenchmarkReporter::Run> complexity_reports;
+  // Keep track of running times of all instances of each benchmark family.
+  std::map<int /*family_index*/, BenchmarkReporter::PerFamilyRunReports>
+      per_family_reports;
 
   if (display_reporter->ReportContext(context) &&
       (!file_reporter || file_reporter->ReportContext(context))) {
     FlushStreams(display_reporter);
     FlushStreams(file_reporter);
 
-    // Without random interleaving, benchmarks are executed in the order of:
-    //   A, A, ..., A, B, B, ..., B, C, C, ..., C, ...
-    // That is, repetition is within RunBenchmark(), hence the name
-    // inner_repetitions.
-    // With random interleaving, benchmarks are executed in the order of:
-    //  {Random order of A, B, C, ...}, {Random order of A, B, C, ...}, ...
-    // That is, repetitions is outside of RunBenchmark(), hence the name
-    // outer_repetitions.
-    int inner_repetitions =
-        FLAGS_benchmark_enable_random_interleaving ? 1 : GetRepetitions();
-    int outer_repetitions =
-        FLAGS_benchmark_enable_random_interleaving ? GetRepetitions() : 1;
-    std::vector<size_t> benchmark_indices(benchmarks.size());
-    for (size_t i = 0; i < benchmarks.size(); ++i) {
-      benchmark_indices[i] = i;
-    }
+    size_t num_repetitions_total = 0;
 
-    std::random_device rd;
-    std::mt19937 g(rd());
-    // 'run_results_vector' and 'benchmarks' are parallel arrays.
-    std::vector<RunResults> run_results_vector(benchmarks.size());
-    for (int i = 0; i < outer_repetitions; i++) {
-      if (FLAGS_benchmark_enable_random_interleaving) {
-        std::shuffle(benchmark_indices.begin(), benchmark_indices.end(), g);
-      }
-      for (size_t j : benchmark_indices) {
-        // Repetitions will be automatically adjusted under random interleaving.
-        if (!FLAGS_benchmark_enable_random_interleaving ||
-            i < benchmarks[j].RandomInterleavingRepetitions()) {
-          RunBenchmark(benchmarks[j], outer_repetitions, inner_repetitions,
-                       &complexity_reports, &run_results_vector[j]);
-          if (!FLAGS_benchmark_enable_random_interleaving) {
-            // Print out reports as they come in.
-            Report(display_reporter, file_reporter, run_results_vector.at(j));
-          }
-        }
-      }
+    std::vector<internal::BenchmarkRunner> runners;
+    runners.reserve(benchmarks.size());
+    for (const BenchmarkInstance& benchmark : benchmarks) {
+      BenchmarkReporter::PerFamilyRunReports* reports_for_family = nullptr;
+      if (benchmark.complexity() != oNone)
+        reports_for_family = &per_family_reports[benchmark.family_index()];
+
+      runners.emplace_back(benchmark, reports_for_family);
+      int num_repeats_of_this_instance = runners.back().GetNumRepeats();
+      num_repetitions_total += num_repeats_of_this_instance;
+      if (reports_for_family)
+        reports_for_family->num_runs_total += num_repeats_of_this_instance;
     }
+    assert(runners.size() == benchmarks.size() && "Unexpected runner count.");
+
+    std::vector<int> repetition_indices;
+    repetition_indices.reserve(num_repetitions_total);
+    for (size_t runner_index = 0, num_runners = runners.size();
+         runner_index != num_runners; ++runner_index) {
+      const internal::BenchmarkRunner& runner = runners[runner_index];
+      std::fill_n(std::back_inserter(repetition_indices),
+                  runner.GetNumRepeats(), runner_index);
+    }
+    assert(repetition_indices.size() == num_repetitions_total &&
+           "Unexpected number of repetition indexes.");
 
     if (FLAGS_benchmark_enable_random_interleaving) {
-      // Print out all reports at the end of the test.
-      for (const RunResults& run_results : run_results_vector) {
-        Report(display_reporter, file_reporter, run_results);
+      std::random_device rd;
+      std::mt19937 g(rd());
+      std::shuffle(repetition_indices.begin(), repetition_indices.end(), g);
+    }
+
+    for (size_t repetition_index : repetition_indices) {
+      internal::BenchmarkRunner& runner = runners[repetition_index];
+      runner.DoOneRepetition();
+      if (runner.HasRepeatsRemaining()) continue;
+      // FIXME: report each repetition separately, not all of them in bulk.
+
+      RunResults run_results = runner.GetResults();
+
+      // Maybe calculate complexity report
+      if (const auto* reports_for_family = runner.GetReportsForFamily()) {
+        if (reports_for_family->num_runs_done ==
+            reports_for_family->num_runs_total) {
+          auto additional_run_stats = ComputeBigO(reports_for_family->Runs);
+          run_results.aggregates_only.insert(run_results.aggregates_only.end(),
+                                             additional_run_stats.begin(),
+                                             additional_run_stats.end());
+          per_family_reports.erase(
+              (int)reports_for_family->Runs.front().family_index);
+        }
       }
+
+      Report(display_reporter, file_reporter, run_results);
     }
   }
   display_reporter->Finalize();
@@ -588,16 +543,12 @@ void ParseCommandLineFlags(int* argc, char** argv) {
     if (ParseBoolFlag(argv[i], "benchmark_list_tests",
                       &FLAGS_benchmark_list_tests) ||
         ParseStringFlag(argv[i], "benchmark_filter", &FLAGS_benchmark_filter) ||
-        ParseDoubleFlag(
-            argv[i], "benchmark_min_time",
-            &do_not_read_flag_directly::FLAGS_benchmark_min_time) ||
-        ParseInt32Flag(
-            argv[i], "benchmark_repetitions",
-            &do_not_read_flag_directly::FLAGS_benchmark_repetitions) ||
+        ParseDoubleFlag(argv[i], "benchmark_min_time",
+                        &FLAGS_benchmark_min_time) ||
+        ParseInt32Flag(argv[i], "benchmark_repetitions",
+                       &FLAGS_benchmark_repetitions) ||
         ParseBoolFlag(argv[i], "benchmark_enable_random_interleaving",
                       &FLAGS_benchmark_enable_random_interleaving) ||
-        ParseDoubleFlag(argv[i], "benchmark_random_interleaving_max_overhead",
-                        &FLAGS_benchmark_random_interleaving_max_overhead) ||
         ParseBoolFlag(argv[i], "benchmark_report_aggregates_only",
                       &FLAGS_benchmark_report_aggregates_only) ||
         ParseBoolFlag(argv[i], "benchmark_display_aggregates_only",
@@ -649,6 +600,10 @@ int InitializeStreams() {
 void Initialize(int* argc, char** argv) {
   internal::ParseCommandLineFlags(argc, argv);
   internal::LogLevel() = FLAGS_v;
+}
+
+void Shutdown() {
+  delete internal::global_context;
 }
 
 bool ReportUnrecognizedArguments(int argc, char** argv) {

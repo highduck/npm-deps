@@ -42,6 +42,7 @@ BENCHMARK(BM_StringCopy);
 int main(int argc, char** argv) {
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
+  benchmark::Shutdown();
   return 0;
 }
 
@@ -274,6 +275,7 @@ class BenchmarkReporter;
 class MemoryManager;
 
 void Initialize(int* argc, char** argv);
+void Shutdown();
 
 // Report to stdout all arguments in 'argv' as unrecognized except the first.
 // Returns true there is at least on unrecognized argument (i.e. 'argc' > 1).
@@ -1314,6 +1316,7 @@ class Fixture : public internal::Benchmark {
     ::benchmark::Initialize(&argc, argv);                               \
     if (::benchmark::ReportUnrecognizedArguments(argc, argv)) return 1; \
     ::benchmark::RunSpecifiedBenchmarks();                              \
+    ::benchmark::Shutdown();                                            \
     return 0;                                                           \
   }                                                                     \
   int main(int, char**)
@@ -1418,6 +1421,8 @@ class BenchmarkReporter {
 
     std::string benchmark_name() const;
     BenchmarkName run_name;
+    int64_t family_index;
+    int64_t per_family_instance_index;
     RunType run_type;
     std::string aggregate_name;
     std::string report_label;  // Empty if not set by benchmark.
@@ -1465,6 +1470,19 @@ class BenchmarkReporter {
     bool has_memory_result;
     double allocs_per_iter;
     int64_t max_bytes_used;
+  };
+
+  struct PerFamilyRunReports {
+    PerFamilyRunReports() : num_runs_total(0), num_runs_done(0) {}
+
+    // How many runs will all instances of this benchmark perform?
+    int num_runs_total;
+
+    // How many runs have happened already?
+    int num_runs_done;
+
+    // The reports about (non-errneous!) runs of this family.
+    std::vector<BenchmarkReporter::Run> Runs;
   };
 
   // Construct a BenchmarkReporter with the output stream set to 'std::cout'

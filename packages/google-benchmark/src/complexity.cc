@@ -193,6 +193,8 @@ std::vector<BenchmarkReporter::Run> ComputeBigO(
   // Get the data from the accumulator to BenchmarkReporter::Run's.
   Run big_o;
   big_o.run_name = run_name;
+  big_o.family_index = reports[0].family_index;
+  big_o.per_family_instance_index = reports[0].per_family_instance_index;
   big_o.run_type = BenchmarkReporter::Run::RT_Aggregate;
   big_o.repetitions = reports[0].repetitions;
   big_o.repetition_index = Run::no_repetition_index;
@@ -215,6 +217,8 @@ std::vector<BenchmarkReporter::Run> ComputeBigO(
   // Only add label to mean/stddev if it is same for all runs
   Run rms;
   rms.run_name = run_name;
+  rms.family_index = reports[0].family_index;
+  rms.per_family_instance_index = reports[0].per_family_instance_index;
   rms.run_type = BenchmarkReporter::Run::RT_Aggregate;
   rms.aggregate_name = "RMS";
   rms.report_label = big_o.report_label;

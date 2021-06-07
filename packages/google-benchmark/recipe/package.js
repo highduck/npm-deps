@@ -3,7 +3,7 @@ const {downloadFiles} = require('@ekx/cli-utils');
 async function run() {
     console.info("Download google benchmark");
     await downloadFiles({
-        srcBaseUrl: "https://github.com/google/benchmark/raw/master",
+        srcBaseUrl: "https://github.com/google/benchmark/raw/main",
         fileList: [
             "include/benchmark/benchmark.h",
             "src/arraysize.h",
@@ -15,8 +15,8 @@ async function run() {
             "src/benchmark_register.h",
             "src/benchmark_runner.cc",
             "src/benchmark_runner.h",
-            "src/benchmark_adjust_repetitions.cc",
-            "src/benchmark_adjust_repetitions.h",
+            // "src/benchmark_adjust_repetitions.cc",
+            // "src/benchmark_adjust_repetitions.h",
             "src/benchmark.cc",
             "src/check.h",
             "src/colorprint.cc",
