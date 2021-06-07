@@ -1,5 +1,11 @@
 # @ekx/google-benchmark
 
+## 0.0.10
+
+### Patch Changes
+
+- 8dc2ad7: auto update
+
 ## 0.0.9
 
 ### Patch Changes
