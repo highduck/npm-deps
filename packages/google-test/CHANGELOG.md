@@ -1,5 +1,11 @@
 # @ekx/google-test
 
+## 0.0.9
+
+### Patch Changes
+
+- 8dc2ad7: auto update
+
 ## 0.0.8
 
 ### Patch Changes

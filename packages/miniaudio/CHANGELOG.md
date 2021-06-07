@@ -1,5 +1,11 @@
 # @ekx/miniaudio
 
+## 0.0.8
+
+### Patch Changes
+
+- 8dc2ad7: auto update
+
 ## 0.0.7
 
 ### Patch Changes
