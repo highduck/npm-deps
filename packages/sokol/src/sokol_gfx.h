@@ -3597,14 +3597,6 @@ typedef struct {
     HINSTANCE d3dcompiler_dll;
     bool d3dcompiler_dll_load_failed;
     pD3DCompile D3DCompile_func;
-    /* the following arrays are used for unbinding resources, they will always contain zeroes */
-    ID3D11RenderTargetView* zero_rtvs[SG_MAX_COLOR_ATTACHMENTS];
-    ID3D11Buffer* zero_vbs[SG_MAX_SHADERSTAGE_BUFFERS];
-    UINT zero_vb_offsets[SG_MAX_SHADERSTAGE_BUFFERS];
-    UINT zero_vb_strides[SG_MAX_SHADERSTAGE_BUFFERS];
-    ID3D11Buffer* zero_cbs[SG_MAX_SHADERSTAGE_UBS];
-    ID3D11ShaderResourceView* zero_srvs[SG_MAX_SHADERSTAGE_IMAGES];
-    ID3D11SamplerState* zero_smps[SG_MAX_SHADERSTAGE_IMAGES];
     /* global subresourcedata array for texture updates */
     D3D11_SUBRESOURCE_DATA subres_data[SG_MAX_MIPMAPS * SG_MAX_TEXTUREARRAY_LAYERS];
 } _sg_d3d11_backend_t;
@@ -5980,6 +5972,14 @@ _SOKOL_PRIVATE void _sg_gl_cache_invalidate_program(GLuint prog) {
     }
 }
 
+/* called from _sg_gl_destroy_pipeline() */
+_SOKOL_PRIVATE void _sg_gl_cache_invalidate_pipeline(_sg_pipeline_t* pip) {
+    if (pip == _sg.gl.cache.cur_pipeline) {
+        _sg.gl.cache.cur_pipeline = 0;
+        _sg.gl.cache.cur_pipeline_id.id = SG_INVALID_ID;
+    }
+}
+
 _SOKOL_PRIVATE void _sg_gl_reset_state_cache(void) {
     if (_sg.gl.cur_context) {
         _SG_GL_CHECK_ERROR();
@@ -6155,6 +6155,7 @@ _SOKOL_PRIVATE sg_resource_state _sg_gl_create_buffer(_sg_buffer_t* buf, const s
         }
         else {
             glGenBuffers(1, &gl_buf);
+            SOKOL_ASSERT(gl_buf);
             _sg_gl_cache_store_buffer_binding(gl_target);
             _sg_gl_cache_bind_buffer(gl_target, gl_buf);
             glBufferData(gl_target, buf->cmn.size, 0, gl_usage);
@@ -6602,8 +6603,7 @@ _SOKOL_PRIVATE sg_resource_state _sg_gl_create_pipeline(_sg_pipeline_t* pip, _sg
 
 _SOKOL_PRIVATE void _sg_gl_destroy_pipeline(_sg_pipeline_t* pip) {
     SOKOL_ASSERT(pip);
-    _SOKOL_UNUSED(pip);
-    /* empty */
+    _sg_gl_cache_invalidate_pipeline(pip);
 }
 
 /*
@@ -6769,6 +6769,7 @@ _SOKOL_PRIVATE sg_resource_state _sg_gl_create_pass(_sg_pass_t* pass, _sg_image_
 
 _SOKOL_PRIVATE void _sg_gl_destroy_pass(_sg_pass_t* pass) {
     SOKOL_ASSERT(pass);
+    SOKOL_ASSERT(pass != _sg.gl.cur_pass);
     _SG_GL_CHECK_ERROR();
     if (0 != pass->gl.fb) {
         glDeleteFramebuffers(1, &pass->gl.fb);
@@ -7844,6 +7845,14 @@ static inline void _sg_d3d11_Unmap(ID3D11DeviceContext* self, ID3D11Resource* pR
     #endif
 }
 
+static inline void _sg_d3d11_ClearState(ID3D11DeviceContext* self) {
+    #if defined(__cplusplus)
+        self->ClearState();
+    #else
+        self->lpVtbl->ClearState(self);
+    #endif
+}
+
 /*-- enum translation functions ----------------------------------------------*/
 _SOKOL_PRIVATE D3D11_USAGE _sg_d3d11_usage(sg_usage usg) {
     switch (usg) {
@@ -8182,21 +8191,7 @@ _SOKOL_PRIVATE void _sg_d3d11_discard_backend(void) {
 
 _SOKOL_PRIVATE void _sg_d3d11_clear_state(void) {
     /* clear all the device context state, so that resource refs don't keep stuck in the d3d device context */
-    _sg_d3d11_OMSetRenderTargets(_sg.d3d11.ctx, SG_MAX_COLOR_ATTACHMENTS, _sg.d3d11.zero_rtvs, NULL);
-    _sg_d3d11_RSSetState(_sg.d3d11.ctx, NULL);
-    _sg_d3d11_OMSetDepthStencilState(_sg.d3d11.ctx, NULL, 0);
-    _sg_d3d11_OMSetBlendState(_sg.d3d11.ctx, NULL, NULL, 0xFFFFFFFF);
-    _sg_d3d11_IASetVertexBuffers(_sg.d3d11.ctx, 0, SG_MAX_SHADERSTAGE_BUFFERS, _sg.d3d11.zero_vbs, _sg.d3d11.zero_vb_strides, _sg.d3d11.zero_vb_offsets);
-    _sg_d3d11_IASetIndexBuffer(_sg.d3d11.ctx, NULL, DXGI_FORMAT_UNKNOWN, 0);
-    _sg_d3d11_IASetInputLayout(_sg.d3d11.ctx, NULL);
-    _sg_d3d11_VSSetShader(_sg.d3d11.ctx, NULL, NULL, 0);
-    _sg_d3d11_PSSetShader(_sg.d3d11.ctx, NULL, NULL, 0);
-    _sg_d3d11_VSSetConstantBuffers(_sg.d3d11.ctx, 0, SG_MAX_SHADERSTAGE_UBS, _sg.d3d11.zero_cbs);
-    _sg_d3d11_PSSetConstantBuffers(_sg.d3d11.ctx, 0, SG_MAX_SHADERSTAGE_UBS, _sg.d3d11.zero_cbs);
-    _sg_d3d11_VSSetShaderResources(_sg.d3d11.ctx, 0, SG_MAX_SHADERSTAGE_IMAGES, _sg.d3d11.zero_srvs);
-    _sg_d3d11_PSSetShaderResources(_sg.d3d11.ctx, 0, SG_MAX_SHADERSTAGE_IMAGES, _sg.d3d11.zero_srvs);
-    _sg_d3d11_VSSetSamplers(_sg.d3d11.ctx, 0, SG_MAX_SHADERSTAGE_IMAGES, _sg.d3d11.zero_smps);
-    _sg_d3d11_PSSetSamplers(_sg.d3d11.ctx, 0, SG_MAX_SHADERSTAGE_IMAGES, _sg.d3d11.zero_smps);
+    _sg_d3d11_ClearState(_sg.d3d11.ctx);
 }
 
 _SOKOL_PRIVATE void _sg_d3d11_reset_state_cache(void) {
@@ -8843,6 +8838,10 @@ _SOKOL_PRIVATE sg_resource_state _sg_d3d11_create_pipeline(_sg_pipeline_t* pip, 
 
 _SOKOL_PRIVATE void _sg_d3d11_destroy_pipeline(_sg_pipeline_t* pip) {
     SOKOL_ASSERT(pip);
+    if (pip == _sg.d3d11.cur_pipeline) {
+        _sg.d3d11.cur_pipeline = 0;
+        _sg.d3d11.cur_pipeline_id.id = SG_INVALID_ID;
+    }
     if (pip->d3d11.il) {
         _sg_d3d11_Release(pip->d3d11.il);
     }
@@ -8949,6 +8948,7 @@ _SOKOL_PRIVATE sg_resource_state _sg_d3d11_create_pass(_sg_pass_t* pass, _sg_ima
 
 _SOKOL_PRIVATE void _sg_d3d11_destroy_pass(_sg_pass_t* pass) {
     SOKOL_ASSERT(pass);
+    SOKOL_ASSERT(pass != _sg.d3d11.cur_pass);
     for (int i = 0; i < SG_MAX_COLOR_ATTACHMENTS; i++) {
         if (pass->d3d11.color_atts[i].rtv) {
             _sg_d3d11_Release(pass->d3d11.color_atts[i].rtv);
@@ -12295,6 +12295,10 @@ _SOKOL_PRIVATE sg_resource_state _sg_wgpu_create_pipeline(_sg_pipeline_t* pip, _
 
 _SOKOL_PRIVATE void _sg_wgpu_destroy_pipeline(_sg_pipeline_t* pip) {
     SOKOL_ASSERT(pip);
+    if (pip == _sg.wgpu.cur_pipeline) {
+        _sg.wgpu.cur_pipeline = 0;
+        _Sg.wgpu.cur_pipeline_id.id = SG_INVALID_ID;
+    }
     if (pip->wgpu.pip) {
         wgpuRenderPipelineRelease(pip->wgpu.pip);
         pip->wgpu.pip = 0;
