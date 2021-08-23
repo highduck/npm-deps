@@ -12,13 +12,10 @@
   },
   "dependencies": {
     "@ekx/dev-fonts": "*",
-    "@ekx/google-test": "*",
-    "@ekx/google-benchmark": "*",
     "@ekx/freetype": "*",
     "@ekx/cairo": "*",
     "@ekx/stb": "*",
     "@ekx/imgui": "*",
-    "@ekx/miniaudio": "*",
     "@ekx/miniz": "*",
     "@ekx/pugixml": "*",
     "@ekx/sokol": "*",
