@@ -1,5 +1,11 @@
 # @ekx/stb
 
+## 0.0.4
+
+### Patch Changes
+
+- e812170: update
+
 ## 0.0.3
 
 ### Patch Changes

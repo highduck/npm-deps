@@ -1,6 +1,6 @@
 {
   "name": "@ekx/sokol-shdc",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "bin": {
     "sokol-shdc": "./sokol-shdc.js"
   },
@@ -17,7 +17,7 @@
     "sokol-shdc.js"
   ],
   "devDependencies": {
-    "@ekx/cli-utils": "0.0.11",
+    "@ekx/cli-utils": "0.0.12",
     "cross-spawn": "^7.0.3"
   },
   "dependencies": {}

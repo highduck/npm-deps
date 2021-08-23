@@ -1,5 +1,13 @@
 # @ekx/imgui
 
+## 0.0.17
+
+### Patch Changes
+
+- a79ec28: update
+- Updated dependencies [e812170]
+  - @ekx/stb@0.0.4
+
 ## 0.0.16
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@ekx/npm-deps-test",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "private": true,
   "scripts": {
     "package:test": "node ./test.js",
