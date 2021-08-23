@@ -1,5 +1,17 @@
 # @ekx/npm-deps-test
 
+## 0.0.7
+
+### Patch Changes
+
+- e812170: remove google-test, google-benchmark, miniaudio
+- Updated dependencies [e812170]
+- Updated dependencies [a79ec28]
+  - @ekx/stb@0.0.4
+  - @ekx/imgui@0.0.17
+  - @ekx/sokol@0.0.11
+  - @ekx/sokol-shdc@0.0.3
+
 ## 0.0.6
 
 ### Patch Changes

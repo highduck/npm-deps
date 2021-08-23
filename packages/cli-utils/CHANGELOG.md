@@ -1,5 +1,11 @@
 # @ekx/cli-utils
 
+## 0.0.12
+
+### Patch Changes
+
+- e812170: update
+
 ## 0.0.11
 
 ### Patch Changes

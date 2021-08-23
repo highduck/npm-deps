@@ -1,5 +1,11 @@
 # @ekx/sokol
 
+## 0.0.11
+
+### Patch Changes
+
+- a79ec28: update
+
 ## 0.0.10
 
 ### Patch Changes
