@@ -1,5 +1,16 @@
 # @ekx/npm-deps-test
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [d6e623f]
+- Updated dependencies [08ccfa0]
+- Updated dependencies [08ccfa0]
+  - @ekx/imgui@0.0.19
+  - @ekx/stb@0.0.6
+  - @ekx/dr-libs@0.0.2
+
 ## 0.0.8
 
 ### Patch Changes
