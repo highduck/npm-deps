@@ -4,7 +4,7 @@
  */
 function setup(project) {
     project.addModule({
-        name: "stb",
+        name: "dr-libs",
         path: __dirname,
         cpp_include: ["include"]
     });

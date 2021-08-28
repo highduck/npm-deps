@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(stb)
+project(dr-libs)
 
 add_library(${PROJECT_NAME} INTERFACE)
 
