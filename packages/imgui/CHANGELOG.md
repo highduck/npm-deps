@@ -1,5 +1,13 @@
 # @ekx/imgui
 
+## 0.0.19
+
+### Patch Changes
+
+- d6e623f: fix stb includes
+- Updated dependencies [08ccfa0]
+  - @ekx/stb@0.0.6
+
 ## 0.0.18
 
 ### Patch Changes

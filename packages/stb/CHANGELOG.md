@@ -1,5 +1,11 @@
 # @ekx/stb
 
+## 0.0.6
+
+### Patch Changes
+
+- 08ccfa0: include all libraries, add to stb subdirectory
+
 ## 0.0.5
 
 ### Patch Changes
