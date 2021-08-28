@@ -1,5 +1,11 @@
 # @ekx/sokol
 
+## 0.0.12
+
+### Patch Changes
+
+- e254208: update module config
+
 ## 0.0.11
 
 ### Patch Changes

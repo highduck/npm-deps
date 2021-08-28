@@ -1,5 +1,11 @@
 # @ekx/tracy
 
+## 0.0.13
+
+### Patch Changes
+
+- e254208: update module config
+
 ## 0.0.12
 
 ### Patch Changes
