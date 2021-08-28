@@ -1,9 +1,13 @@
-const path = require('path');
-
-module.exports = (ctx) => {
-    ctx.addModule({
+/**
+ *
+ * @param {Project} project
+ */
+function setup(project) {
+    project.addModule({
         name: "freetype",
-        cppIncludeDirectories: [path.join(__dirname, "include")],
+        path: __dirname,
+        cpp_include: ["include", "src"],
+        // TODO:
         cppSources: [
             "src/base/ftadvanc.c",
             "src/base/ftcalc.c",
@@ -51,4 +55,6 @@ module.exports = (ctx) => {
             "src/winfonts/winfnt.c"
         ]
     });
-};
+}
+
+module.exports = setup;

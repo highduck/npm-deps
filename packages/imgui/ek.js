@@ -1,10 +1,15 @@
-const path = require('path');
-
-module.exports = (ctx) => {
-    ctx.addModule({
+/**
+ *
+ * @param {Project} project
+ */
+function setup(project) {
+    project.addModule({
         name: "imgui",
-        cpp: [path.join(__dirname, "src")]
+        path: __dirname,
+        cpp: ["src"]
     });
-    ctx.importModule("@ekx/freetype", __dirname);
-    ctx.importModule("@ekx/stb", __dirname);
-};
+    project.importModule("@ekx/freetype", __dirname);
+    project.importModule("@ekx/stb", __dirname);
+}
+
+module.exports = setup;

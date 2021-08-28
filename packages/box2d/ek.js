@@ -1,11 +1,13 @@
-const path = require('path');
-
-module.exports = (ctx) => {
-    ctx.addModule({
+/**
+ *
+ * @param {Project} project
+ */
+function setup(project) {
+    project.addModule({
         name: "box2d",
-        cpp: [
-            path.join(__dirname, "src"),
-            path.join(__dirname, "include")
-        ]
+        path: __dirname,
+        cpp: ["src", "include"]
     });
-};
+}
+
+module.exports = setup;

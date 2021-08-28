@@ -1,10 +1,13 @@
-const path = require('path');
-
-module.exports = (ctx) => {
-    ctx.addModule({
+/**
+ *
+ * @param {Project} project
+ */
+function setup(project) {
+    project.addModule({
         name: "doctest",
-        cpp: [
-            path.join(__dirname, "doctest")
-        ]
+        path: __dirname,
+        cpp: ["doctest"]
     });
-};
+}
+
+module.exports = setup;

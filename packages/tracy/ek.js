@@ -1,9 +1,14 @@
-const path = require('path');
 
-module.exports = (ctx) => {
-    ctx.addModule({
+/**
+ *
+ * @param {Project} project
+ */
+function setup(project) {
+    project.addModule({
         name: "tracy",
-        // using stub for export builds
-        cpp: [path.join(__dirname, "stub")]
+        path: __dirname,
+        cpp: ["stub"]
     });
-};
+}
+
+module.exports = setup;
