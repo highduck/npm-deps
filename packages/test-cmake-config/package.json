@@ -14,6 +14,7 @@
     "@ekx/dev-fonts": "*",
     "@ekx/freetype": "*",
     "@ekx/cairo": "*",
+    "@ekx/dr-libs": "*",
     "@ekx/stb": "*",
     "@ekx/imgui": "*",
     "@ekx/miniz": "*",

@@ -1,8 +1,8 @@
 
 #define IMGUI_ENABLE_FREETYPE
 #define IMGUI_DISABLE_STB_TRUETYPE_IMPLEMENTATION
-#define IMGUI_STB_TRUETYPE_FILENAME  <stb_truetype.h>
-#define IMGUI_STB_RECT_PACK_FILENAME  <stb_rect_pack.h>
+#define IMGUI_STB_TRUETYPE_FILENAME  <stb/stb_truetype.h>
+#define IMGUI_STB_RECT_PACK_FILENAME  <stb/stb_rect_pack.h>
 
 //-----------------------------------------------------------------------------
 // COMPILE-TIME OPTIONS FOR DEAR IMGUI
