@@ -1,5 +1,11 @@
 # @ekx/stb
 
+## 0.0.5
+
+### Patch Changes
+
+- e254208: update module config
+
 ## 0.0.4
 
 ### Patch Changes

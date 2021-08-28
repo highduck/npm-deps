@@ -1,5 +1,11 @@
 # @ekx/freetype
 
+## 0.0.8
+
+### Patch Changes
+
+- e254208: update module config
+
 ## 0.0.7
 
 ### Patch Changes

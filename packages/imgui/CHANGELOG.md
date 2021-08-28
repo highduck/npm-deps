@@ -1,5 +1,14 @@
 # @ekx/imgui
 
+## 0.0.18
+
+### Patch Changes
+
+- e254208: update module config
+- Updated dependencies [e254208]
+  - @ekx/freetype@0.0.8
+  - @ekx/stb@0.0.5
+
 ## 0.0.17
 
 ### Patch Changes
