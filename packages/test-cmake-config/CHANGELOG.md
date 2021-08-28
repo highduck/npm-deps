@@ -1,5 +1,17 @@
 # @ekx/npm-deps-test
 
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [e254208]
+  - @ekx/dev-fonts@0.0.9
+  - @ekx/freetype@0.0.8
+  - @ekx/imgui@0.0.18
+  - @ekx/sokol@0.0.12
+  - @ekx/stb@0.0.5
+  - @ekx/tracy@0.0.13
+
 ## 0.0.7
 
 ### Patch Changes
