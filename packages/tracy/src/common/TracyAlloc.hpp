@@ -13,13 +13,7 @@ namespace tracy
 {
 
 #ifdef TRACY_ENABLE
-extern thread_local bool RpThreadInitDone;
-TRACY_API void InitRpmallocPlumbing();
-
-static tracy_force_inline void InitRpmalloc()
-{
-    if( !RpThreadInitDone ) InitRpmallocPlumbing();
-}
+TRACY_API void InitRpmalloc();
 #endif
 
 static inline void* tracy_malloc( size_t size )
@@ -32,10 +26,28 @@ static inline void* tracy_malloc( size_t size )
 #endif
 }
 
+static inline void* tracy_malloc_fast( size_t size )
+{
+#ifdef TRACY_ENABLE
+    return rpmalloc( size );
+#else
+    return malloc( size );
+#endif
+}
+
 static inline void tracy_free( void* ptr )
 {
 #ifdef TRACY_ENABLE
     InitRpmalloc();
+    rpfree( ptr );
+#else
+    free( ptr );
+#endif
+}
+
+static inline void tracy_free_fast( void* ptr )
+{
+#ifdef TRACY_ENABLE
     rpfree( ptr );
 #else
     free( ptr );

@@ -210,8 +210,16 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
     for (const buildType of options.buildType) {
         const buildDir = getBuildDir('test-package', buildType);
         const args = [];
-        if(process.env.USE_CCACHE) {
+        if (0 | process.env.USE_CCACHE as any) {
             args.push("-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache");
+        }
+        else {
+            if (process.env.CC) {
+                args.push(`-DCMAKE_C_COMPILER_LAUNCHER=${process.env.CC}`);
+            }
+            if (process.env.CXX) {
+                args.push(`-DCMAKE_CXX_COMPILER_LAUNCHER=${process.env.CXX}`);
+            }
         }
         await executeAsync("cmake", [
             "-S", "./test",
