@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {spawn} from "child_process";
 import * as crypto from 'crypto';
+import {build} from "cmake-build";
 
 export function makeDirs(dir: string) {
     if (!fs.existsSync(dir)) {
@@ -188,66 +189,25 @@ function resolveTestPackageOptions(optionsOrBuildTypes: [TestPackageOptions] | s
     return options;
 }
 
-function getBuildDir(project: string, buildType?: string): string {
-    return path.join(process.cwd(), 'build', project, buildType?.toLowerCase());
-}
-
 export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] | string[]) {
     const options = resolveTestPackageOptions(optionsOrBuildTypes);
     const optionsTargets = options.target as string[];
 
-    // 1. clean
-    for (const buildType of options.buildType) {
-        const buildDir = getBuildDir('test-package', buildType);
-        try {
-            await fs.promises.rm(buildDir, {recursive: true});
-        } catch (e) {
-
-        }
-    }
-
-    // 2. configure
-    for (const buildType of options.buildType) {
-        const buildDir = getBuildDir('test-package', buildType);
-        const args = [];
-        if (0 | process.env.USE_CCACHE as any) {
-            args.push("-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache");
-        }
-        else {
-            if (process.env.CC) {
-                args.push(`-DCMAKE_C_COMPILER_LAUNCHER=${process.env.CC}`);
-            }
-            if (process.env.CXX) {
-                args.push(`-DCMAKE_CXX_COMPILER_LAUNCHER=${process.env.CXX}`);
-            }
-        }
-        await executeAsync("cmake", [
-            "-S", "./test",
-            "-B", buildDir,
-            "-G", "Ninja",
-            `-DCMAKE_BUILD_TYPE=${buildType}`,
-            ...args
-        ]);
-    }
-
-    // 3. build targets
-    for (const buildType of options.buildType) {
-        const buildDir = getBuildDir('test-package', buildType);
-        await executeAsync("cmake", [
-            "--build", buildDir,
-            "--target", ...optionsTargets
-        ]);
-    }
-
     let totalRun = 0;
     let totalOK = 0;
     let totalFailed = 0;
-    // 4. execute targets
+
     for (const buildType of options.buildType) {
-        const buildDir = getBuildDir('test-package', buildType);
+        const buildResult = await build({
+            clean: true,
+            buildsFolder: "build/test-package",
+            ninja: true,
+            target: optionsTargets
+        });
+
         for (const target of optionsTargets) {
             const result = await executeAsync("./" + target, [], {
-                cwd: buildDir,
+                cwd: buildResult.buildDir,
                 passExitCode: true
             });
             console.info("Test run exit code:", result);
@@ -264,12 +224,4 @@ export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] |
 
     console.info("SUCCESSFUL TESTS:", totalOK, "/", totalRun);
     console.warn("FAILED TESTS", totalFailed, "/", totalRun);
-
-    // 5. clean
-    try {
-        const projectBuildDir = getBuildDir('test-package');
-        await fs.promises.rm(projectBuildDir, {recursive: true});
-    } catch {
-        // mute
-    }
 }

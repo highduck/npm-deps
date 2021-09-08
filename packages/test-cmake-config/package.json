@@ -8,9 +8,12 @@
   },
   "devDependencies": {
     "@ekx/cli-utils": "*",
-    "npm-cmake": "*"
+    "npm-cmake": "*",
+    "cmake-build": "0.0.1"
   },
   "dependencies": {
+    "@ekx/doctest": "*",
+    "@ekx/box2d": "*",
     "@ekx/dev-fonts": "*",
     "@ekx/freetype": "*",
     "@ekx/cairo": "*",
