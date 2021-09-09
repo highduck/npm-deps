@@ -10,5 +10,5 @@ int main(int argc, char* argv[]) {
     printf("- Font Awesome 5 Solid: %s\n", FONT_ICON_FILE_NAME_FAS);
     printf("- Material Icons Regular: %s\n", FONT_ICON_FILE_NAME_MD);
 
-    return EXIT_SUCCESS;
+    return 0;
 }

@@ -8,7 +8,7 @@ try {
 }
 catch {
     console.error("fail to create output directory");
-    process.exit(-1);
+    process.exit(1);
 }
 
 const r = spawn.sync("./sokol-shdc.js", [
@@ -22,14 +22,12 @@ const r = spawn.sync("./sokol-shdc.js", [
 
 if(r.status !== 0 && r.status !== 0xFFFFFFFF) {
     console.warn("sokol-shdc status:", r.status);
-    //process.exit(-1);
+    //process.exit(1);
 }
 
 if(!existsSync("build/test-shader/simple2d_shader.h")) {
     console.error("shader header not found");
-    process.exit(-1);
+    process.exit(1);
 }
 
 rmSync("build/test-shader", {recursive: true});
-
-process.exit(0);

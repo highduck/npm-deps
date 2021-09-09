@@ -4,12 +4,11 @@
   "private": true,
   "scripts": {
     "package:test": "node ./test.js",
-    "postinstall": "npm-cmake || exit 0"
+    "postinstall": "cmake-build || exit 0"
   },
   "devDependencies": {
     "@ekx/cli-utils": "*",
-    "npm-cmake": "*",
-    "cmake-build": "0.0.1"
+    "cmake-build": "0.0.3"
   },
   "dependencies": {
     "@ekx/doctest": "*",

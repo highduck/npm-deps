@@ -44,7 +44,6 @@ static constexpr int GetSamplingPeriod()
 #    include <dbghelp.h>
 #    include <evntrace.h>
 #    include <evntcons.h>
-#    include <evntprov.h>
 #    include <psapi.h>
 #    include <winternl.h>
 

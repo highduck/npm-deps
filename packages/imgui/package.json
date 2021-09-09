@@ -4,7 +4,7 @@
   "scripts": {
     "recipe:build": "node recipe/package.js",
     "package:test": "node recipe/test-package.js",
-    "postinstall": "npm-cmake || exit 0"
+    "postinstall": "cmake-build || exit 0"
   },
   "license": "ISC",
   "publishConfig": {
@@ -20,6 +20,6 @@
   "dependencies": {
     "@ekx/freetype": "0.0.8",
     "@ekx/stb": "0.0.6",
-    "npm-cmake": "^0.1.0"
+    "cmake-build": "^0.0.2"
   }
 }

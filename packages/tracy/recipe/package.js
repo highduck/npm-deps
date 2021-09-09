@@ -24,7 +24,6 @@ async function run() {
             "common/TracySystem.cpp",
             "common/TracySystem.hpp",
             "common/TracyYield.hpp",
-            "common/TracyYield.cpp",
             "common/TracyStackFrames.hpp",
             "common/TracyStackFrames.cpp",
             "client/TracyAlloc.cpp",

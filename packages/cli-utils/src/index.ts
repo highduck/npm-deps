@@ -3,7 +3,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {spawn} from "child_process";
 import * as crypto from 'crypto';
-import {build} from "cmake-build";
 
 export function makeDirs(dir: string) {
     if (!fs.existsSync(dir)) {
@@ -149,79 +148,4 @@ export function executeAsync(bin: string, args: string[], options?: ExecuteOptio
             }
         });
     });
-}
-
-/** Test Package **/
-export interface TestPackageOptions {
-    target?: string | string[];
-    buildType?: string | string[];
-    // set null to ignore
-    expectExitCode?: number | null
-}
-
-function resolveTestPackageOptions(optionsOrBuildTypes: [TestPackageOptions] | string[]) {
-    let options: TestPackageOptions = {};
-
-    if (optionsOrBuildTypes.length > 0) {
-        if (typeof optionsOrBuildTypes[0] === 'string') {
-            options.buildType = optionsOrBuildTypes as string[];
-        } else {
-            options = optionsOrBuildTypes[0] as TestPackageOptions;
-        }
-    }
-
-    if (options.buildType === undefined) {
-        options.buildType = ['Debug', 'Release'];
-    } else if (typeof options.buildType === 'string') {
-        options.buildType = [options.buildType];
-    }
-
-    if (options.target === undefined) {
-        options.target = ['test-package'];
-    } else if (typeof options.target === 'string') {
-        options.target = [options.target];
-    }
-
-    if (options.expectExitCode === undefined) {
-        options.expectExitCode = 0;
-    }
-
-    return options;
-}
-
-export async function testPackage(...optionsOrBuildTypes: [TestPackageOptions] | string[]) {
-    const options = resolveTestPackageOptions(optionsOrBuildTypes);
-    const optionsTargets = options.target as string[];
-
-    let totalRun = 0;
-    let totalOK = 0;
-    let totalFailed = 0;
-
-    for (const buildType of options.buildType) {
-        const buildResult = await build({
-            clean: true,
-            buildsFolder: "build/test-package",
-            ninja: true,
-            target: optionsTargets
-        });
-
-        for (const target of optionsTargets) {
-            const result = await executeAsync("./" + target, [], {
-                cwd: buildResult.buildDir,
-                passExitCode: true
-            });
-            console.info("Test run exit code:", result);
-            if (options.expectExitCode !== null &&
-                result != options.expectExitCode) {
-                console.error("Test run FAILED: exit code should be", options.expectExitCode);
-                ++totalFailed;
-            } else {
-                ++totalOK;
-            }
-            ++totalRun;
-        }
-    }
-
-    console.info("SUCCESSFUL TESTS:", totalOK, "/", totalRun);
-    console.warn("FAILED TESTS", totalFailed, "/", totalRun);
 }

@@ -1,6 +1,0 @@
-node_modules/
-build/
-cmake-*/
-_dist/
-include/
-src/

@@ -1,7 +1,6 @@
-const {testPackage} = require('@ekx/cli-utils');
+const {buildMatrix} = require('cmake-build');
 
-async function run() {
-    await testPackage('Debug', 'Release');
-}
-
-run().catch(() => process.exit(1));
+buildMatrix({
+    cmakePath: "test",
+    test: true
+}).catch(_ => process.exit(1));

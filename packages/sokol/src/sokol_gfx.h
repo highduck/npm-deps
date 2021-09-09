@@ -3110,7 +3110,7 @@ typedef struct {
 } _sg_pipeline_common_t;
 
 _SOKOL_PRIVATE void _sg_pipeline_common_init(_sg_pipeline_common_t* cmn, const sg_pipeline_desc* desc) {
-    SOKOL_ASSERT(desc->color_count < SG_MAX_COLOR_ATTACHMENTS);
+    SOKOL_ASSERT((desc->color_count >= 1) && (desc->color_count <= SG_MAX_COLOR_ATTACHMENTS));
     cmn->shader_id = desc->shader;
     cmn->index_type = desc->index_type;
     for (int i = 0; i < SG_MAX_SHADERSTAGE_BUFFERS; i++) {
@@ -9333,7 +9333,11 @@ _SOKOL_PRIVATE MTLLoadAction _sg_mtl_load_action(sg_action a) {
 _SOKOL_PRIVATE MTLResourceOptions _sg_mtl_buffer_resource_options(sg_usage usg) {
     switch (usg) {
         case SG_USAGE_IMMUTABLE:
+            #if defined(_SG_TARGET_MACOS)
+            return MTLResourceStorageModeManaged;
+            #else
             return MTLResourceStorageModeShared;
+            #endif
         case SG_USAGE_DYNAMIC:
         case SG_USAGE_STREAM:
             #if defined(_SG_TARGET_MACOS)
