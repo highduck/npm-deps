@@ -20,6 +20,6 @@
   "dependencies": {
     "@ekx/freetype": "0.0.8",
     "@ekx/stb": "0.0.6",
-    "cmake-build": "^0.0.2"
+    "cmake-build": "0.0.3"
   }
 }
