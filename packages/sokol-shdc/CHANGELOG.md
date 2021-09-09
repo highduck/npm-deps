@@ -1,5 +1,11 @@
 # @ekx/sokol-shdc
 
+## 0.0.4
+
+### Patch Changes
+
+- 67789a4: switch to cmake-build
+
 ## 0.0.3
 
 ### Patch Changes

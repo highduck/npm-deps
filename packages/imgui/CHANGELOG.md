@@ -1,5 +1,15 @@
 # @ekx/imgui
 
+## 0.0.20
+
+### Patch Changes
+
+- 67789a4: switch to cmake-build
+- 974ecc4: switch to cmake-build
+- Updated dependencies [67789a4]
+  - @ekx/freetype@0.0.9
+  - @ekx/stb@0.0.7
+
 ## 0.0.19
 
 ### Patch Changes

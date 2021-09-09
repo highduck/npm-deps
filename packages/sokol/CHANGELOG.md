@@ -1,5 +1,11 @@
 # @ekx/sokol
 
+## 0.0.13
+
+### Patch Changes
+
+- 67789a4: switch to cmake-build
+
 ## 0.0.12
 
 ### Patch Changes

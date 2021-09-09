@@ -1,5 +1,14 @@
 # @ekx/cli-utils
 
+## 0.0.13
+
+### Patch Changes
+
+- d372c40: use cmake-build to build package test
+- 67789a4: switch to cmake-build
+- 5451aae: cmake ccache, cc, cxx
+- 974ecc4: switch to cmake-build
+
 ## 0.0.12
 
 ### Patch Changes

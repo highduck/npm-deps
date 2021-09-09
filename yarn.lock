@@ -506,10 +506,10 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
 
-cmake-build@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/cmake-build/-/cmake-build-0.0.1.tgz#06059fabe10d0df0d1ff9ba92e2ed7e5bc26c259"
-  integrity sha512-L1QpjYrAL5yx3M9xdshnswWp4smv05+J+pkE8xFaG3Zy88VxX9KFXOnzpelsCiOYl1b+Wrl5alZvw4ONHStEpQ==
+cmake-build@0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/cmake-build/-/cmake-build-0.0.3.tgz#dab8e066dbc9b070cb36ef9752159bf221fc9b3b"
+  integrity sha512-wx9SuGl4uoJkGiFFTskwgV8k96vlBEjq0yt4vyHrZUZxPvrdQK4TQOj90AxNWVHkmIxFBxcZbJJpYjNdHEyMwA==
 
 color-convert@^1.9.0:
   version "1.9.3"
@@ -1164,11 +1164,6 @@ normalize-package-data@^2.5.0:
     resolve "^1.10.0"
     semver "2 || 3 || 4 || 5"
     validate-npm-package-license "^3.0.1"
-
-npm-cmake@*, npm-cmake@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/npm-cmake/-/npm-cmake-0.1.0.tgz#f41d06a45514c8116ca9b509fece3d4c108c7d3d"
-  integrity sha512-5+KvNIcBoXN5uK0JCW8vURoNHSbapK4+QXLdzo8Eq8VCQyz8FVrboiEDuOZpE3gW9SnHrhhbUtQj3TWFKiZzfA==
 
 npm-run-path@^2.0.0:
   version "2.0.2"

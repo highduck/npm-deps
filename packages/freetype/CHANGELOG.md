@@ -1,5 +1,11 @@
 # @ekx/freetype
 
+## 0.0.9
+
+### Patch Changes
+
+- 67789a4: switch to cmake-build
+
 ## 0.0.8
 
 ### Patch Changes
