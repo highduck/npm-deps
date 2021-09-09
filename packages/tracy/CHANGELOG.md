@@ -1,5 +1,12 @@
 # @ekx/tracy
 
+## 0.0.14
+
+### Patch Changes
+
+- 5451aae: Update + android compile fix
+- 67789a4: switch to cmake-build
+
 ## 0.0.13
 
 ### Patch Changes

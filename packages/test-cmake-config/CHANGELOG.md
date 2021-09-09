@@ -1,5 +1,30 @@
 # @ekx/npm-deps-test
 
+## 0.0.10
+
+### Patch Changes
+
+- 5451aae: cmake
+- 67789a4: switch to cmake-build
+- d372c40: use cmake-build
+- 974ecc4: switch to cmake-build
+- Updated dependencies [5451aae]
+- Updated dependencies [67789a4]
+- Updated dependencies [974ecc4]
+  - @ekx/tracy@0.0.14
+  - @ekx/box2d@0.0.4
+  - @ekx/cairo@0.0.7
+  - @ekx/dev-fonts@0.0.10
+  - @ekx/doctest@0.0.3
+  - @ekx/dr-libs@0.0.3
+  - @ekx/freetype@0.0.9
+  - @ekx/imgui@0.0.20
+  - @ekx/miniz@0.0.4
+  - @ekx/pugixml@0.0.6
+  - @ekx/sokol@0.0.13
+  - @ekx/sokol-shdc@0.0.4
+  - @ekx/stb@0.0.7
+
 ## 0.0.9
 
 ### Patch Changes
