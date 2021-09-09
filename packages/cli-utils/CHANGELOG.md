@@ -1,5 +1,11 @@
 # @ekx/cli-utils
 
+## 0.0.14
+
+### Patch Changes
+
+- c77fde8: update dependencies
+
 ## 0.0.13
 
 ### Patch Changes
