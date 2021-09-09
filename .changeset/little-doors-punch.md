@@ -1,0 +1,19 @@
+---
+"@ekx/box2d": patch
+"@ekx/cairo": patch
+"@ekx/cli-utils": patch
+"@ekx/dev-fonts": patch
+"@ekx/doctest": patch
+"@ekx/dr-libs": patch
+"@ekx/freetype": patch
+"@ekx/imgui": patch
+"@ekx/miniz": patch
+"@ekx/pugixml": patch
+"@ekx/sokol": patch
+"@ekx/sokol-shdc": patch
+"@ekx/stb": patch
+"@ekx/npm-deps-test": patch
+"@ekx/tracy": patch
+---
+
+switch to cmake-build
