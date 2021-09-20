@@ -1,5 +1,14 @@
 # @ekx/cli-utils
 
+## 0.0.15
+
+### Patch Changes
+
+- 94a1faf: build(deps-dev): bump @types/node from 16.9.1 to 16.9.2
+- bbe9d94: build(deps-dev): bump @types/node from 16.9.2 to 16.9.4
+- 2b9439b: build(deps-dev): bump typescript from 4.4.2 to 4.4.3
+- 8d61c3a: build(deps): bump follow-redirects from 1.14.3 to 1.14.4
+
 ## 0.0.14
 
 ### Patch Changes
